@@ -117,14 +117,15 @@ export default {
       this.cancelShow = false;
     },
     // 获取QQ音乐当前热门推荐
-    loadMusicRecommend() {
-      // const res = getBanner()
-      // console.log(res)
-      getBanner().then((res) => {
-        console.log(res)
-      }).catch(e => {
-        console.log('error: ' + e)
-      }) 
+    async loadMusicRecommend() {
+      try {
+        const { status, data } = await getBanner()
+        if (status === 200) {
+          console.log(data.banners)
+        }
+      } catch (e) {
+        console.log('首页推荐轮播图加载失败: ' + e)
+      }      
     }
   }
 };
