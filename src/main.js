@@ -3,9 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from '@/store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// 对封装完成的 axios 全局引入
+import Api from './utils/http.js';
+Vue.prototype.$http = Api;
 
+// 全局使用 elementui
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false
@@ -14,6 +19,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

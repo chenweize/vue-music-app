@@ -1,10 +1,16 @@
 <template>
   <div class="header-music-search">
     <div class="music-search-box">
-      <el-input class="search-input" placeholder="请输入内容" v-model="searchWords" @blur="onBlur" @focus="onFocus">
+      <el-input
+        class="search-input"
+        placeholder="请输入内容"
+        v-model="searchWords"
+        @blur="onBlur"
+        @focus="onFocus"
+      >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSearchMusic"></i>
       </el-input>
-      
+
       <div
         class="search-cancel"
         v-if="cancelShow"
@@ -84,35 +90,41 @@
 </template>
 
 <script>
+import { getBanner } from "@/api/main-page";
 
 export default {
   name: "MusicSearch",
   data() {
     return {
-      searchWords: '', // 搜索关键词
-      cancelShow: false, // 是否显示取消字段
+      searchWords: "", // 搜索关键词
+      cancelShow: false // 是否显示取消字段
     };
   },
   created() {
-    this.loadMusicRecommend()
+    this.loadMusicRecommend();
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     onClickSearchMusic() {
-      console.log(this.searchWords)
+      console.log(this.searchWords);
     },
     // 当搜索框聚焦时
     onFocus() {
-      this.cancelShow = true
+      this.cancelShow = true;
     },
     // 当搜索框失焦时
     onBlur() {
-      this.cancelShow = false
+      this.cancelShow = false;
     },
     // 获取QQ音乐当前热门推荐
     loadMusicRecommend() {
-        console.log('cccc')
+      // const res = getBanner()
+      // console.log(res)
+      getBanner().then((res) => {
+        console.log(res)
+      }).catch(e => {
+        console.log('error: ' + e)
+      }) 
     }
   }
 };
