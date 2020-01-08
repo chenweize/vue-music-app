@@ -35,10 +35,8 @@ http.interceptors.response.use(
     },
     error => {
         if (error.response && error.response.status == 404) {
-            router.push('/blank.vue')
+            router.push('/blank.vue') // 重定向到 404 页面
         }
-
-
         return Promise.reject(error.response)
     }
 )
@@ -55,7 +53,7 @@ export function get(url, params = {}) {
 }
 
 
-//封装post请求
+// 封装post请求
 export function post(url, data = {}) {
     //默认配置 
     let sendObject = {
@@ -70,7 +68,7 @@ export function post(url, data = {}) {
     return http(sendObject)
 }
 
-//封装put方法 (resfulAPI常用)
+// 封装put方法 (resfulAPI常用)
 export function put(url, data = {}) {
     return http({
         url: url,
@@ -81,7 +79,7 @@ export function put(url, data = {}) {
         data: JSON.stringify(data)
     })
 }
-//删除方法(resfulAPI常用)
+// 删除方法(resfulAPI常用)
 export function deletes(url) {
     return http({
         url: url,
@@ -90,8 +88,4 @@ export function deletes(url) {
     })
 }
 
-//不要忘记export
-// export {
-//     http
-// }
 export default http;
