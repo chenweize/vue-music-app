@@ -35,7 +35,9 @@ export default {
     return {
     };
   },
-  created() {},
+  created() {
+    this.$router.push('/recommend')
+  },
   computed: {},
   watch: {},
   mounted() {},
@@ -52,7 +54,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #31c27c; // #22d59c
+  background-color: #22d59c; // #31c27c
   .music-header {
     display: flex;
     flex: 1;
@@ -88,7 +90,7 @@ export default {
     .music-tab-item {
       flex: 1;
       text-align: center;
-      color: #e4e4e4;
+      color: #e9e9e9;
     }
     .router-link-active {
       .tab-item-title {
