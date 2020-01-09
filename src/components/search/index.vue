@@ -322,8 +322,6 @@ export default {
       display: flex;
       flex-direction: column;
       width: 100%;
-      // height: 100%;
-      // overflow: hidden;
       .search-hots {
         .search-hots-title {
           margin: 10px;
@@ -453,67 +451,6 @@ export default {
           }
         }
       }
-      /*
-      .search-result-title {
-        margin-left: 20px;
-        color: #22d59c;
-        font-size: 14px;
-        line-height: 35px;
-      }
-      .search-result-item {
-        display: flex;
-        height: 100%;
-        padding: 5px 20px;
-        border-bottom: 1px solid #e3e3e3;
-        // justify-content: flex-start;
-        .result-item-avatar {
-        }
-        .singer-item-info {
-          margin-left: 15px;
-          .singer-item-name {
-            line-height: 50px;
-            font-size: 15px;
-          }
-        }
-
-        .playlists-item-info {
-          margin-left: 15px;
-          display: flex;
-          height: 50px;
-          overflow: hidden;
-          flex: 1;
-          box-sizing: border-box;
-          flex-direction: column;
-          justify-content: space-around;
-          .playlists-item-name {
-            font-size: 15px;
-          }
-          .playlists-item-atrister {
-            font-size: 14px;
-            color: #e3e3e3;
-          }
-        }
-
-        .songs-item-info {
-          display: flex;
-          flex-direction: column;
-          .songs-item-name {
-            font-size: 16px;
-            color: #2e3030;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .songs-item-atrister {
-            font-size: 12px;
-            color: #757575;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-      }
-      */
     }
   }
 }
