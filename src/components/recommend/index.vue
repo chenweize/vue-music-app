@@ -23,9 +23,9 @@ export default {
     // 获取QQ音乐当前热门推荐
     async loadMusicRecommend() {
       try {
-        const { status, data } = await getBanner()
+        const { status, payload } = await getBanner()
         if (status === 200) {
-          console.log(data.banners)
+          console.log(payload.banners)
         }
       } catch (e) {
         console.log('首页推荐轮播图加载失败: ' + e)

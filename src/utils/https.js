@@ -9,15 +9,15 @@ let http = axios.create({
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     },
     // 参数转化
-    transformRequest: [function (data) {
-        let newData = '';
-        for (let k in data) {
-            if (data.hasOwnProperty(k) === true) {
-                newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-            }
-        }
-        return newData;
-    }]
+    // transformRequest: [function (data) {
+    //     let newData = '';
+    //     for (let k in data) {
+    //         if (data.hasOwnProperty(k) === true) {
+    //             newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+    //         }
+    //     }
+    //     return newData;
+    // }]
 });
 // 添加request拦截器 
 http.interceptors.request.use(config => {
@@ -35,7 +35,8 @@ http.interceptors.response.use(
     },
     error => {
         if (error.response && error.response.status == 404) {
-            router.push('/blank.vue') // 重定向到 404 页面
+            console.log('http请求失败: ' + error)
+            // router.push('/blank.vue') // 重定向到 404 页面
         }
         return Promise.reject(error.response)
     }
@@ -43,6 +44,7 @@ http.interceptors.response.use(
 
 export function get(url, params = {}) {
     params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
+    console.log(params)
     return http({
         url: url,
         method: 'get',

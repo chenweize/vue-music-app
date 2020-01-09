@@ -3,61 +3,48 @@
  */
 
 
-// import axios from 'axios'
+import axios from 'axios'
 
-// let http = axios.create({
-//     baseURL: 'http://localhost:8080/',
-//     withCredentials: true, // 是否跨域
-//     headers: {
-//         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-//     },
-//     // 参数转化
-//     transformRequest: [function (data) {
-//         let newData = '';
-//         for (let k in data) {
-//             if (data.hasOwnProperty(k) === true) {
-//                 newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-//             }
-//         }
-//         return newData;
-//     }]
-// });
+let http = axios.create({
+    baseURL: 'http://localhost:8080/',
+    withCredentials: true, // 是否跨域
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    // 参数转化
+    transformRequest: [function (data) {
+        let newData = '';
+        for (let k in data) {
+            if (data.hasOwnProperty(k) === true) {
+                newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+            }
+        }
+        return newData;
+    }]
+});
 
-// function apiAxios(method, url, params, response) {
-//     http({
-//         method: method,
-//         url: url,
-//         data: method === 'POST' || method === 'PUT' ? params : null,
-//         params: method === 'GET' || method === 'DELETE' ? params : null,
-//     }).then(function (res) {
-//         response(res);
-//     }).catch(function (err) {
-//         response(err);
-//     })
-// }
+// 添加request拦截器 
+http.interceptors.request.use(config => {
+    // console.log(config)
+    return config
+}, error => {
+    Promise.reject(error)
+})
+// 添加respone拦截器
+http.interceptors.response.use(
+    response => {
+        let res = {};
+        res.status = response.status
+        res.payload = response.data;
+        return res;
+    },
+    error => {
+        if (error.response && error.response.status == 404) {
+            console.log('http请求失败: ' + error)
+            // router.push('/blank.vue') // 重定向到 404 页面
+        }
+        return Promise.reject(error.response)
+    }
+)
 
-// export default {
-//     get: function (url, params, response) {
-//         return apiAxios('GET', url, params, response)
-//     },
-//     post: function (url, params, response) {
-//         return apiAxios('POST', url, params, response)
-//     },
-//     put: function (url, params, response) {
-//         return apiAxios('PUT', url, params, response)
-//     },
-//     delete: function (url, params, response) {
-//         return apiAxios('DELETE', url, params, response)
-//     }
-// }
-
-// 使用方法示例
-// this.$http.post('user/login.do(地址)', {
-//     "参数名": "参数值"
-// }, response => {
-//     if (response.status >= 200 && response.status < 300) {
-//         console.log(response.data); // 请求成功，response为成功信息参数
-//     } else {
-//         console.log(response.message); // 请求失败，response为失败信息
-//     }
-// });
+export default http;

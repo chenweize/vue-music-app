@@ -2,13 +2,13 @@
   <div class="music-app-header-container">
     <div class="music-header">
       <router-link tag="div" class="music-header-user" to="/user">
-        <icon class="el-icon-user"></icon>
+        <i class="el-icon-user"></i>
       </router-link>
       <div class="music-header-title">
         <span>QQMUSIC</span>
       </div>
       <router-link tag="div" class="music-header-search" to="/search">
-        <icon class="el-icon-search"></icon>
+        <i class="el-icon-search"></i>
       </router-link>
     </div>
 
