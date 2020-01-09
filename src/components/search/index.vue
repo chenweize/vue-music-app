@@ -60,12 +60,7 @@
             </div>
             <div class="search-history-item">
               <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
+              <span class="history-item-title">林俊杰</span>
               <i slot="prefix" class="history-item-icon el-icon-close"></i>
             </div>
             <div class="search-history-item">
@@ -75,12 +70,7 @@
             </div>
             <div class="search-history-item">
               <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
+              <span class="history-item-title">林俊杰</span>
               <i slot="prefix" class="history-item-icon el-icon-close"></i>
             </div>
             <div class="search-history-item">
@@ -90,12 +80,7 @@
             </div>
             <div class="search-history-item">
               <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
+              <span class="history-item-title">林俊杰</span>
               <i slot="prefix" class="history-item-icon el-icon-close"></i>
             </div>
             <div class="search-history-item">
@@ -105,42 +90,12 @@
             </div>
             <div class="search-history-item">
               <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
               <span class="history-item-title">林俊杰</span>
               <i slot="prefix" class="history-item-icon el-icon-close"></i>
             </div>
             <div class="search-history-item">
               <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
               <span class="history-item-title">林俊杰</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">周杰伦</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
-            </div>
-            <div class="search-history-item">
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">张靓颖</span>
               <i slot="prefix" class="history-item-icon el-icon-close"></i>
             </div>
             <div class="search-history-item">
@@ -152,32 +107,45 @@
         </div>
 
         <div class="music-search-result" v-else>
-          <!-- <div style="height: 100%; overflow: hidden;"> -->
-          <div class="search-result-item-title" v-if="singers.length > 0">歌手</div>
-          <div class="search-result-item" v-for="singer in singers" :key="singer.id">
-            <el-avatar class="result-item-avatar" shape="square" :size="50" :src="singer.picUrl"></el-avatar>
-            <div class="singer-item-info">
-              <span class="singer-item-name">{{ '歌手: ' + singer.name }}</span>
+          <div class="search-result-item" v-if="singers.length > 0">
+            <div class="search-result-item-title">歌手</div>
+            <div class="search-result-item-singer" v-for="singer in singers" :key="singer.id">
+              <el-avatar
+                class="result-singer-avatar"
+                shape="square"
+                :size="50"
+                :src="singer.picUrl"
+              ></el-avatar>
+              <div class="result-singer-info">
+                <p class="result-singer-name">{{ '歌手: ' + singer.name }}</p>
+              </div>
             </div>
           </div>
 
-          <div class="search-result-item-title" v-if="playlists.length > 0">歌单</div>
-          <div class="search-result-item" v-for="list in playlists" :key="list.id">
-            <el-avatar class="result-item-avatar" shape="square" :size="50" :src="list.coverImgUrl"></el-avatar>
-            <div class="playlists-item-info">
-              <span class="playlists-item-name">{{ '歌单: ' + list.name }}</span>
-              <!-- <span class="playlists-item-atrister">{{ list.name }}</span> -->
+          <div class="search-result-item" v-if="playlists.length > 0">
+            <div class="search-result-item-title">歌单</div>
+            <div class="search-result-item-playlist" v-for="list in playlists" :key="list.id">
+              <el-avatar
+                class="result-playlist-avatar"
+                shape="square"
+                :size="50"
+                :src="list.coverImgUrl"
+              ></el-avatar>
+              <div class="result-playlist-info">
+                <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
+              </div>
             </div>
           </div>
 
-          <div class="search-result-item-title" v-if="songs.length > 0">歌曲</div>
-          <div class="search-result-item" v-for="song in songs" :key="song.id">
-            <div class="songs-item-info">
-              <span class="songs-item-name">{{ song.name }}</span>
-              <span class="songs-item-atrister">{{ song.artists[0].name }}</span>
+          <div class="search-result-item" v-if="songs.length > 0">
+            <div class="search-result-item-title">歌曲</div>
+            <div class="search-result-item-song" v-for="song in songs" :key="song.id">
+              <div class="result-song-info">
+                <span class="result-song-name">{{ song.name }}</span>
+                <span class="result-song-atrister">{{ song.artists[0].name }}</span>
+              </div>
             </div>
           </div>
-          <!-- </div> -->
         </div>
       </div>
     </scroll>
@@ -271,7 +239,9 @@ export default {
         const { status, payload } = await getSearchByKeyWords(params);
         if (status == 200) {
           this.singers = payload.result.artists ? payload.result.artists : [];
-          this.playlists = payload.result.playlists ? payload.result.playlists : [];
+          this.playlists = payload.result.playlists
+            ? payload.result.playlists
+            : [];
           this.songs = payload.result.songs ? payload.result.songs : [];
           this.refreshScroll();
         }
@@ -314,15 +284,15 @@ export default {
   background-color: #ffffff; // #22d59c
   .music-search-box {
     background-color: #22d59c;
-    padding: 10px;
     display: flex;
     align-items: center;
     .music-back {
       font-size: 20px;
-      margin-right: 5px;
+      margin: 0 10px;
     }
     .search-input {
       flex: 1;
+      margin: 10px 10px 10px 0;
       .el-input__inner {
         border-radius: 40px;
         color: #ffffff;
@@ -407,19 +377,88 @@ export default {
       flex-direction: column;
       width: 100%;
       // position: relative;
-      // top: 0px;
+      // top: 0;
       // bottom: 0;
       // width: 100%;
+      .search-result-item {
+        // display: flex;
+        // flex-direction: column;
+        // width: 100%;
+        .search-result-item-title {
+          padding-left: 20px;
+          color: #22d59c;
+          font-size: 14px;
+          line-height: 30px;
+          background-color: #f1f1f1;
+        }
+
+        .search-result-item-singer {
+          display: flex;
+          height: 50px;
+          padding: 5px 20px;
+          border-bottom: 1px solid #e3e3e3;
+          .result-singer-info {
+            margin-left: 15px;
+            flex: 1;
+            display: flex;
+            height: 50px;
+            overflow: hidden;
+            .result-singer-name {
+              margin: auto 0;
+              font-size: 15px;
+            }
+          }
+        }
+
+        .search-result-item-playlist {
+          display: flex;
+          height: 50px;
+          padding: 5px 20px;
+          border-bottom: 1px solid #e3e3e3;
+          .result-playlist-info {
+            margin-left: 15px;
+            flex: 1;
+            display: flex;
+            height: 50px;
+            overflow: hidden;
+            .result-playlist-name {
+              margin: auto 0;
+              font-size: 15px;
+            }
+          }
+        }
+
+        .search-result-item-song {
+          display: flex;
+          height: 40px;
+          padding: 5px 20px;
+          border-bottom: 1px solid #e3e3e3;
+          .result-song-info {
+            display: flex;
+            flex-direction: column;
+            .result-song-name {
+              font-size: 16px;
+              color: #2e3030;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .result-song-atrister {
+              font-size: 12px;
+              color: #757575;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+      /*
       .search-result-title {
         margin-left: 20px;
         color: #22d59c;
         font-size: 14px;
         line-height: 35px;
-      }
-      .search-result-item-title {
-        background-color: #f3f3f3;
-        color: #22d59c;
-        padding: 3px 0 4px 20px;
       }
       .search-result-item {
         display: flex;
@@ -474,6 +513,7 @@ export default {
           }
         }
       }
+      */
     }
   }
 }
