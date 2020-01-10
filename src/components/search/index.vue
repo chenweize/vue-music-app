@@ -1,9 +1,9 @@
 <template>
   <div class="music-app-search-container">
     <div class="music-search-box">
-      <router-link tag="div" class="music-back" to="/">
-        <i style="color: #fff;" class="el-icon-back"></i>
-      </router-link>
+      <!-- <router-link tag="div" class="music-back" to="/"> -->
+      <i style="color: #fff;" class="music-back el-icon-back" @click="onClickBack"></i>
+      <!-- </router-link> -->
       <el-input
         class="search-input"
         placeholder="请输入内容"
@@ -32,7 +32,7 @@
       <!-- better-scroll 只对容器内第一个div实现滚动效果 -->
       <div ref="search">
         <div class="music-search-info" v-if="!searchWords">
-          <div class="search-hots" v-loading="searchHotLoading">
+          <div class="search-hots" v-loading="searchHotLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
             <div class="search-hots-title">热门搜索</div>
             <span
               class="search-hots-item"
@@ -106,10 +106,16 @@
           </div>
         </div>
 
-        <div class="music-search-result" v-else>
+        <div
+          class="music-search-result"
+          v-else
+          v-loading="searchHotLoading"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+        >
           <div class="search-result-item" v-if="singers.length > 0">
             <div class="search-result-item-title">歌手</div>
-            <div class="search-result-item-singer" v-for="singer in singers" :key="singer.id">
+            <div class="search-result-item-singer" v-for="singer in singers" :key="singer.id" @click="onClickSearchItem(singer)">
               <el-avatar
                 class="result-singer-avatar"
                 shape="square"
@@ -124,7 +130,7 @@
 
           <div class="search-result-item" v-if="playlists.length > 0">
             <div class="search-result-item-title">歌单</div>
-            <div class="search-result-item-playlist" v-for="list in playlists" :key="list.id">
+            <div class="search-result-item-playlist" v-for="list in playlists" :key="list.id" @click="onClickSearchItem(list)">
               <el-avatar
                 class="result-playlist-avatar"
                 shape="square"
@@ -139,7 +145,7 @@
 
           <div class="search-result-item" v-if="songs.length > 0">
             <div class="search-result-item-title">歌曲</div>
-            <div class="search-result-item-song" v-for="song in songs" :key="song.id">
+            <div class="search-result-item-song" v-for="song in songs" :key="song.id" @click="onClickSearchItem(song)">
               <div class="result-song-info">
                 <span class="result-song-name">{{ song.name }}</span>
                 <span class="result-song-atrister">{{ song.artists[0].name }}</span>
@@ -174,16 +180,16 @@ export default {
       hots: [], // 热门搜索
       searchHotLoading: false, // 热门搜索loading效果
       searchResultLoading: false, // 搜索结果loading效果
-      avatarUrl:
-        "http://p2.music.126.net/973EEWcaSOhZFWgBWzUXxg==/109951163894057459.jpg",
       singers: [],
       playlists: [],
-      songs: []
+      songs: [],
+      searchRecords: [] // 搜索记录
     };
   },
   created() {
     this.getHotSearchInfo();
-    // this.getAlbumImageUrl()
+    // 获取当前浏览器本地 localStorage 的历史记录
+    this.searchRecords = localStorage.getItem('search_history_of_music')
   },
   // 每次进入该页面的时候触发 activated()
   activated() {
@@ -192,19 +198,28 @@ export default {
   computed: {},
   watch: {
     async searchWords(value) {
+      this.searchHotLoading = true;
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
-        if (value != "" || !isNil(value)) {
+        if (value == "" || isNil(value)) {
+          this.searchHotLoading = false;
+        } else {
           this.getSearchResult();
         }
       }, 1500);
     }
   },
-  async mounted() {
-    // await this.$nextTick()
-    // this.$refs.searchScroll
-  },
+  mounted() {},
   methods: {
+    // 返回首页
+    onClickBack() {
+      // this.$router.push("/");
+      if (this.searchWords) {
+        this.searchWords = "";
+      } else {
+        this.$router.back();
+      }
+    },
     // 当点击搜索框搜索图标时
     onClickSearchMusic() {
       this.getSearchResult();
@@ -223,12 +238,15 @@ export default {
     },
     // 获取热门搜索
     async getHotSearchInfo() {
+      this.searchHotLoading = true;
       try {
         const { status, payload } = await getHots();
         if (status == 200) {
           this.hots = payload.result.hots;
         }
+        this.searchHotLoading = false;
       } catch (e) {
+        this.searchHotLoading = false;
         console.log("热门搜索获取失败: " + e);
       }
     },
@@ -245,7 +263,9 @@ export default {
           this.songs = payload.result.songs ? payload.result.songs : [];
           this.refreshScroll();
         }
+        this.searchHotLoading = false;
       } catch (e) {
+        this.searchHotLoading = false;
         console.log("相关搜索结果获取失败: " + e);
       }
     },
@@ -255,18 +275,9 @@ export default {
       });
     },
     // 获取专辑图片
-    async getAlbumImageUrl() {
-      let imgUrl = defaultAlbumImg;
-      try {
-        const { status, payload } = await getAlbumInfo({ id: 19316 });
-        if (status == 200) {
-          imgUrl = payload.album.picUrl;
-          console.log(img);
-        }
-      } catch (e) {
-        console.log("专辑图片获取失败:" + e);
-      }
-      return img;
+    onClickSearchItem(item) {
+      
+      console.log(item)
     }
   },
   destroyed() {}
@@ -278,8 +289,9 @@ export default {
   position: fixed;
   width: 100%;
   top: 0;
-  left: 0;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
   z-index: 100;
   background-color: #ffffff; // #22d59c
   .music-search-box {
@@ -291,13 +303,18 @@ export default {
       margin: 0 10px;
     }
     .search-input {
-      flex: 1;
+      // flex: 1;
       margin: 10px 10px 10px 0;
       .el-input__inner {
-        border-radius: 40px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 30px;
         color: #ffffff;
         border: 1px solid #fff;
         background-color: #22d59c;
+      }
+      .el-input__icon {
+        line-height: 30px;
       }
     }
     input::-webkit-input-placeholder {
@@ -314,6 +331,7 @@ export default {
   .music-search-scroll {
     position: relative;
     display: flex;
+    flex: 1;
     flex-direction: column;
     width: 100%;
     height: 100%;
