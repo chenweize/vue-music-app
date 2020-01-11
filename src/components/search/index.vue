@@ -1,4 +1,5 @@
 <template>
+<transition name="searchMusic">
   <div class="music-app-search-container">
     <div class="music-search-box">
       <!-- <router-link tag="div" class="music-back" to="/"> -->
@@ -134,6 +135,7 @@
       </div>
     </scroll>
   </div>
+</transition>
 </template>
 
 <script>
@@ -473,5 +475,12 @@ export default {
       }
     }
   }
+}
+.searchMusic-enter-active, .searchMusic-leave-active {
+  transition: all 0.3s;
+}
+.searchMusic-enter, .searchMusic-leave-to {
+  transform: translate3d(50%, 0, 0);
+  opacity: 0;
 }
 </style>

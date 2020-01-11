@@ -10,7 +10,7 @@
         <div class="recommend-music-lists">
           <h4 class="music-lists-title">推荐歌单</h4>
           <div class="music-lists-container">
-            <div class="music-lists-item" v-for="item in musicLists" :key="item.id">
+            <div class="music-lists-item" v-for="item in musicLists" :key="item.id" @click="onClickMusicLists(item)">
               <span class="lists-item-hot">
                 <i class="el-icon-headset"></i>
                 {{ Math.floor(item.playCount / 10000) }}万
@@ -24,7 +24,7 @@
         <div class="recommend-music-lists">
           <h4 class="music-lists-title">最新音乐</h4>
           <div class="music-lists-container">
-            <div class="music-lists-item" v-for="item in newSongs" :key="item.id">
+            <div class="music-lists-item" v-for="item in newSongs" :key="item.id" @click="onClickNewMusic(item)">
               <el-image class="lists-item-img" fit="fill" :src="item.picUrl"></el-image>
               <span class="lists-item-title">{{ item.name + '-' + item.song.artists.map(i => {return i.name}).join('/') }}</span>
             </div>
@@ -32,6 +32,7 @@
         </div>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -49,8 +50,6 @@ export default {
   components: { Scroll, Slider },
   data() {
     return {
-      picUrl:
-        "http://p1.music.126.net/44OV4VB6g9rQR5rXhkzCIQ==/109951164616785247.jpg",
       banners: [], // 轮播图数据
       musicLists: [], // 推荐歌单
       newSongs: [] // 推荐歌曲
@@ -81,7 +80,6 @@ export default {
         const { status, payload } = await getRecommendLists(params);
         if (status === 200) {
           this.musicLists = payload.result;
-          console.log(this.musicLists);
         }
       } catch (e) {
         console.log("首页推荐轮播图加载失败: " + e);
@@ -93,11 +91,18 @@ export default {
         const { status, payload } = await getRecommendNewSongs();
         if (status === 200) {
           this.newSongs = payload.result.slice(0, 6); // 取前六首
-          console.log(this.newSongs);
         }
       } catch (e) {
         console.log("首页推荐轮播图加载失败: " + e);
       }
+    },
+    // 点击歌单
+    onClickMusicLists(item) {
+      console.log(item, '11')
+    },
+    // 点击新歌
+    onClickNewMusic(item) {
+      console.log(item, '22')
     }
   }
 };
@@ -150,8 +155,9 @@ export default {
           box-sizing: border-box;
           display: flex;
           flex-direction: column;
-          width: 7rem;
-          height: 9rem;
+          // width: 7rem;
+          // height: 9rem;
+          width: 30%;
           overflow: hidden;
           margin-bottom: 5px;
           .lists-item-hot {
@@ -162,9 +168,10 @@ export default {
             position: absolute;
           }
           .lists-item-img {
-            width: 7rem;
-            height: 7rem;
-            border-radius: 0.2rem;
+            // width: 7rem;
+            // height: 7rem;
+            // border-radius: 0.2rem;
+            border-radius: 5px;
           }
           .lists-item-title {
             text-overflow: -o-clip-lastline;
