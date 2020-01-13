@@ -7,15 +7,21 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      // 默认跳转到 recommend
+      // 默认跳转到 recommend (推荐页)
       path: '/',
-      // component: Recommend
-      component: () => import('@/components/recommend')
+      redirect: '/recommend'
+      // component: () => import('@/components/recommend')
     },
     {
-      // 推荐页
+      // 
       path: '/recommend',
-      component: () => import('@/components/recommend')
+      component: () => import('@/components/recommend'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/musicList')
+        }
+      ]
     },
     {
       // 歌曲排行榜页

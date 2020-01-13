@@ -21,6 +21,16 @@ export function getRecommendLists (params) {
   })
 }
 
+// 获取推荐歌单详情
+export function getMusicLists (params) {
+  const url = HOST + `/playlist/detail`
+  return http({
+    method: 'GET',
+    url,
+    params
+  })
+}
+
 // 获取推荐歌曲
 export function getRecommendNewSongs () {
   const url = HOST + `/personalized/newsong`

@@ -10,7 +10,12 @@
         <div class="recommend-music-lists">
           <h4 class="music-lists-title">推荐歌单</h4>
           <div class="music-lists-container">
-            <div class="music-lists-item" v-for="item in musicLists" :key="item.id" @click="onClickMusicLists(item)">
+            <div
+              class="music-lists-item"
+              v-for="item in recommendLists"
+              :key="item.id"
+              @click="onClickRecommendList(item)"
+            >
               <span class="lists-item-hot">
                 <i class="el-icon-headset"></i>
                 {{ Math.floor(item.playCount / 10000) }}万
@@ -24,15 +29,22 @@
         <div class="recommend-music-lists">
           <h4 class="music-lists-title">最新音乐</h4>
           <div class="music-lists-container">
-            <div class="music-lists-item" v-for="item in newSongs" :key="item.id" @click="onClickNewMusic(item)">
+            <div
+              class="music-lists-item"
+              v-for="item in newSongs"
+              :key="item.id"
+              @click="onClickNewMusic(item)"
+            >
               <el-image class="lists-item-img" fit="fill" :src="item.picUrl"></el-image>
-              <span class="lists-item-title">{{ item.name + '-' + item.song.artists.map(i => {return i.name}).join('/') }}</span>
+              <span
+                class="lists-item-title"
+              >{{ item.name + '-' + item.song.artists.map(i => {return i.name}).join('/') }}</span>
             </div>
           </div>
         </div>
       </div>
     </scroll>
-    <router-view></router-view>
+    <router-view :musicListInfo="playListInfo"></router-view>
   </div>
 </template>
 
@@ -44,14 +56,16 @@ import {
   getRecommendNewSongs
 } from "@/api/main-page";
 import Slider from "@/common/slider";
+import { get } from "vuex-pathify";
 
 export default {
   name: "MusicRecommend",
   components: { Scroll, Slider },
   data() {
     return {
+      playListInfo: {},
       banners: [], // 轮播图数据
-      musicLists: [], // 推荐歌单
+      recommendLists: [], // 推荐歌单
       newSongs: [] // 推荐歌曲
     };
   },
@@ -79,7 +93,7 @@ export default {
       try {
         const { status, payload } = await getRecommendLists(params);
         if (status === 200) {
-          this.musicLists = payload.result;
+          this.recommendLists = payload.result;
         }
       } catch (e) {
         console.log("首页推荐轮播图加载失败: " + e);
@@ -97,12 +111,16 @@ export default {
       }
     },
     // 点击歌单
-    onClickMusicLists(item) {
-      console.log(item, '11')
+    onClickRecommendList(item) {
+      // 根据我个人研究发现, 歌单 type = 0, 新歌 type = 4
+      console.log(item)
+      this.playListInfo = item
+      this.$router.push({ path: `/recommend/${item.id}` });
+      this.$store.dispatch("musicLists/loadMusicList", { id: item.id });
     },
     // 点击新歌
     onClickNewMusic(item) {
-      console.log(item, '22')
+      console.log(item, "22");
     }
   }
 };

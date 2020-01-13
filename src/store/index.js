@@ -1,16 +1,30 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-// import PlayService from './PlayService'
-// import ApiService from './ApiService'
-// import NotifyService from './NotifyService'
+import getters from './getters'
+import pathify from './pathify'
+// import cache from './plugins/cache'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  modules: {
-    // PlayService,
-    // ApiService,
-    // NotifyService
-  }
+const modulesFiles = require.context('./modules', false, /\.js$/)
+
+//  自动导入模块
+// you do not need `import app from './modules/app'`
+// it will auto require all vuex module from modules file
+const modules = modulesFiles.keys().reduce((modules, modulePath) => {
+  // set './app.js' => 'app'
+  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const value = modulesFiles(modulePath)
+  modules[moduleName] = value.default
+  return modules
+}, {})
+
+const store = new Vuex.Store({
+  plugins: [pathify.plugin], // cache()
+  getters,
+  modules
 })
+
+window.store = store
+
+export default store

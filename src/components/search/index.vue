@@ -3,15 +3,9 @@
   <div class="music-app-search-container">
     <div class="music-search-box">
       <!-- <router-link tag="div" class="music-back" to="/"> -->
-      <i style="color: #fff;" class="music-back el-icon-back" @click="onClickBack"></i>
+      <i class="music-back el-icon-back" @click="onClickBack"></i>
       <!-- </router-link> -->
-      <el-input
-        class="search-input"
-        placeholder="请输入内容"
-        v-model="searchWords"
-        @blur="onBlur"
-        @focus="onFocus"
-      >
+      <el-input class="search-input" placeholder="请输入内容" v-model="searchWords">
         <i
           v-if="searchWords"
           slot="suffix"
@@ -33,18 +27,9 @@
       <!-- better-scroll 只对容器内第一个div实现滚动效果 -->
       <div ref="search">
         <div class="music-search-info" v-if="!searchWords">
-          <div
-            class="search-hots"
-            v-loading="searchHotLoading"
-            element-loading-text="拼命加载中"
-            element-loading-spinner="el-icon-loading"
-          >
+          <div class="search-hots">
             <div class="search-hots-title">热门搜索</div>
-            <span
-              class="search-hots-item"
-              v-for="(item, index) in hots"
-              :key="index"
-            >{{ item.first }}</span>
+            <span class="search-hots-item" v-for="(item, index) in hots" :key="index">{{ item.first }}</span>
           </div>
 
           <div class="search-history">
@@ -68,7 +53,7 @@
         <div
           class="music-search-result"
           v-else
-          v-loading="searchResultLoading"
+          v-loading="loading"
           element-loading-text="拼命加载中"
           element-loading-spinner="el-icon-loading"
         >
@@ -140,9 +125,9 @@
 
 <script>
 import Scroll from "@/common/scroll";
-import { getHots, getSearchByKeyWords, getAlbumInfo } from "@/api/search-page";
+import { getSearchByKeyWords } from "@/api/search-page";
 import { isNil, isEmpty } from "ramda";
-import defaultAlbumImg from "@/assets/defualt_album.jpg";
+import { get } from "vuex-pathify"
 
 let timer = null; // 设置计时器防抖
 
@@ -156,10 +141,7 @@ export default {
     return {
       pullup: true,
       searchWords: "", // 搜索关键词
-      cancelShow: false, // 是否显示取消字段
-      hots: [], // 热门搜索
-      searchHotLoading: false, // 热门搜索loading效果
-      searchResultLoading: false, // 搜索结果loading效果
+      loading: false, // 搜索结果loading效果
       singers: [],
       playlists: [],
       songs: [],
@@ -178,14 +160,16 @@ export default {
   activated() {
     this.searchWords = ""; // 清空搜索内容
   },
-  computed: {},
+  computed: {
+    hots: get('musicLists/hots') // 热门搜索
+  },
   watch: {
     async searchWords(value) {
-      this.searchResultLoading = true;
+      this.loading = true;
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         if (value == "" || isNil(value)) {
-          this.searchResultLoading = false;
+          this.loading = false;
         } else {
           this.getSearchResult();
         }
@@ -211,27 +195,9 @@ export default {
     onClickClearWords() {
       this.searchWords = "";
     },
-    // 当搜索框聚焦时
-    onFocus() {
-      this.cancelShow = true;
-    },
-    // 当搜索框失焦时
-    onBlur() {
-      this.cancelShow = false;
-    },
     // 获取热门搜索
     async getHotSearchInfo() {
-      this.searchHotLoading = true;
-      try {
-        const { status, payload } = await getHots();
-        if (status == 200) {
-          this.hots = payload.result.hots;
-        }
-        this.searchHotLoading = false;
-      } catch (e) {
-        this.searchHotLoading = false;
-        console.log("热门搜索获取失败: " + e);
-      }
+      this.$store.dispatch('musicLists/loadHots')
     },
     // 获取关键词搜索结果
     async getSearchResult() {
@@ -251,10 +217,10 @@ export default {
           // 动态更新滚动条高度
           this.refreshScroll();
         }
-        this.searchResultLoading = false;
+        this.loading = false;
       } catch (e) {
         this.isErrResult = true;
-        this.searchResultLoading = false;
+        this.loading = false;
         console.log("相关搜索结果获取失败: " + e);
       }
     },
@@ -304,6 +270,7 @@ export default {
     align-items: center;
     .music-back {
       font-size: 20px;
+      color: #fff;
       margin: 0 10px;
     }
     .search-input {
