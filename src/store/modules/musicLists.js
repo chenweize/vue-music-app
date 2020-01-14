@@ -45,8 +45,13 @@ const actions = {
                 } else {
                     commit('SET_MUSICLISTS',  payload.result.tracks )
                 }
+            } else {
+                // 如果加载失败, 就清空仓库的歌单数据
+                commit('SET_MUSICLISTS', [] )
             }
         } catch (e) {
+            // 如果加载失败, 就清空仓库的歌单数据
+            commit('SET_MUSICLISTS', [] )
             console.log("首页推荐轮播图加载失败: " + e);
         }
     }

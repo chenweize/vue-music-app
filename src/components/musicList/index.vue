@@ -22,13 +22,28 @@
         </div>
       </div>
 
-      <scroll class="music-list-scroll" ref="playListScroll">
+      <scroll 
+        class="music-list-scroll" 
+        ref="playListScroll"
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading">
         <div>
           <div class="play-list-header">
             <i class="play-list-icon el-icon-video-play"></i>
-            <span class="play-list-header-title">{{ '播放全部(共'+ playList.length +')' }}</span>
+            <div class="play-list-header-title">
+              播放全部
+              <span>{{ '(共'+ playList.length +')' }}</span>
+            </div>
           </div>
-          <div></div>
+          <div class="play-list-item" v-for="(item, index) in playList" :key="item.id">
+            <div class="play-list-item-no">{{ index + 1 }}</div>
+            <div class="play-list-item-info">
+              <div class="play-list-item-name">{{ item.name }}</div>
+              <div class="play-list-item-artists">{{ item.artists.map(i => {return i.name}).join('/') }}</div>
+            </div>
+            <div class="play-list-item-icon el-icon-video-play"></div>
+          </div>
         </div>
       </scroll>
     </div>
@@ -42,13 +57,15 @@ import { get } from "vuex-pathify";
 export default {
   name: "MusicList",
   props: {
-    musicListInfo: { type: Object, default: () => {} }
+    musicListInfo: { type: Object, default: () => {} },
+    loading: { type: Boolean, default: false }
   },
   components: {
     Scroll
   },
   data() {
-    return {};
+    return {
+    };
   },
   created() {},
   computed: {
@@ -139,20 +156,63 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #f2f3f4;
+    background-color: #fff; // #f2f3f4
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     flex: 1;
     .play-list-header {
+      display: flex;
       height: 40px;
       line-height: 40px;
-      padding: 0 15px;
+      padding: 0 10px;
       border-bottom: 1px solid #dedede;
       .play-list-icon {
         font-size: 22px;
+        margin: auto 0;
       }
       .play-list-header-title {
         font-size: 16px;
+        flex: 1;
+        margin-left: 8px;
+        span {
+          font-size: 15px;
+          color: #888;
+        }
+      }
+    }
+    .play-list-item {
+      display: flex;
+      width: 100%;
+      .play-list-item-no {
+        width: 40px;
+        font-size: 17px;
+        color: #999;
+        margin: auto 0;
+        text-align: center;
+      }
+      .play-list-item-info {
+        padding: 6px 0;
+        flex: 1;
+        width: 100%;
+        overflow: hidden;
+          text-overflow: ellipsis;
+        .play-list-item-name {
+          font-size: 17px;
+          white-space: nowrap;
+          word-break: normal;
+        }
+        .play-list-item-artists {
+          font-size: 13px;
+          color: #888;
+          margin-top: 3px;
+          white-space: nowrap;
+          word-break: normal;
+        }
+      }
+      .play-list-item-icon {
+        color: #999;
+        margin: auto 20px;
+        font-size: 22px;
       }
     }
   }
