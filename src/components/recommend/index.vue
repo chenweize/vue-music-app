@@ -113,8 +113,7 @@ export default {
     },
     // 点击歌单
     async onClickRecommendList(item) {
-      // 根据我个人研究发现, 歌单 type = 0, 新歌 type = 4
-      this.playListInfo = item
+      this.playListInfo = item // 点击的歌单详情
       this.loading = true // 给歌单添加加载效果
       this.$router.push({ path: `/recommend/${item.id}` }); // 跳转至歌单详情界面
       await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
@@ -122,7 +121,7 @@ export default {
     },
     // 点击新歌
     onClickNewMusic(item) {
-      console.log(item, "22");
+      // this.$router.push({ path: `/recommend/${item.id}` });
     }
   }
 };

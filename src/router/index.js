@@ -26,7 +26,13 @@ export default new Router({
     {
       // 歌曲排行榜页
       path: '/rank',
-      component: () => import('@/components/rank')
+      component: () => import('@/components/rank'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/musicList')
+        }
+      ]
     },
     {
       // 歌手页
