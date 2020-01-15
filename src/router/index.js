@@ -37,7 +37,13 @@ export default new Router({
     {
       // 歌手页
       path: '/singer',
-      component: () => import('@/components/singer')
+      component: () => import('@/components/singer'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/musicList')
+        }
+      ]
     },
     {
       // 搜索页

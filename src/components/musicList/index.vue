@@ -15,10 +15,14 @@
         </div>
         <div class="music-list-info-footer">
           <h4 class="music-list-footer-text">{{ musicListInfo.name }}</h4>
-          <span class="music-list-footer-hot">
+          <span class="music-list-footer-hot" v-if="musicListInfo.playCount">
             <i class="el-icon-headset"></i>
             {{ Math.floor(musicListInfo.playCount / 10000) }}万
           </span>
+          <div class="music-list-footer-desc" v-if="musicListInfo.desc">
+            <span>{{ '简介：' + musicListInfo.desc }}</span>
+          </div>
+          
         </div>
       </div>
 
@@ -149,6 +153,10 @@ export default {
       }
       .music-list-footer-hot {
         margin: 10px 20px;
+      }
+      .music-list-footer-desc {
+        margin: 10px 20px 0 20px;
+        font-size: 13px;
       }
     }
   }
