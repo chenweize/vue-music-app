@@ -55,6 +55,7 @@ import {
   getRecommendLists,
   getRecommendNewSongs
 } from "@/api/main-page";
+import { getLyric } from "@/api/player-page";
 import Slider from "@/common/slider";
 import { get } from "vuex-pathify";
 
@@ -113,14 +114,21 @@ export default {
     },
     // 点击歌单
     async onClickRecommendList(item) {
-      this.playListInfo = item // 点击的歌单详情
-      this.loading = true // 给歌单添加加载效果
+      this.playListInfo = item; // 点击的歌单详情
+      this.loading = true; // 给歌单添加加载效果
       this.$router.push({ path: `/recommend/${item.id}` }); // 跳转至歌单详情界面
       await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
-      this.loading = false // 无论函数执行成功或失败, 都显示loading状态
+      this.loading = false; // 无论函数执行成功或失败, 都显示loading状态
     },
     // 点击新歌
-    onClickNewMusic(item) {
+    async onClickNewMusic(item) {
+      console.log(item)
+      try {
+        const res = await getLyric({ id: item.id })
+        console.log(res)
+      } catch (e) {
+        console.log('歌词获取失败: ' + e)
+      }
       // this.$router.push({ path: `/recommend/${item.id}` });
     }
   }
