@@ -48,7 +48,13 @@ export default new Router({
     {
       // 搜索页
       path: '/search',
-      component: () => import('@/components/search')
+      component: () => import('@/components/search'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/musicList')
+        }
+      ]
     },
     {
       // 个人页

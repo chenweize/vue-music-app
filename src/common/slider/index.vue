@@ -3,7 +3,7 @@
     <div class="slider-ul" ref="sliderUl">
       <div class="slider-li" v-for="(item,index) in imgDatas" :key="index">
         <a :href="item.url">
-          <img :src="item.picUrl" />
+          <img :src="item.imageUrl" />
         </a>
       </div>
     </div>

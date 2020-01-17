@@ -4,7 +4,7 @@
       <div class="music-list-info">
         <div
           class="music-list-info-background"
-          :style="{ 'background-image': 'url(' + musicListInfo.picUrl + ')' }"
+          :style="{ 'background-image': 'url(' + listInfo.picUrl + ')' }"
         ></div>
         <div class="music-list-info-bg-mask"></div>
         <div class="music-list-info-header">
@@ -14,24 +14,24 @@
           </div>
         </div>
         <div class="music-list-info-footer">
-          <h4 class="music-list-footer-text">{{ musicListInfo.name }}</h4>
-          <span class="music-list-footer-hot" v-if="musicListInfo.playCount">
+          <h4 class="music-list-footer-text">{{ listInfo.name }}</h4>
+          <span class="music-list-footer-hot" v-if="listInfo.playCount">
             <i class="el-icon-headset"></i>
-            {{ Math.floor(musicListInfo.playCount / 10000) }}万
+            {{ Math.floor(listInfo.playCount / 10000) }}万
           </span>
-          <div class="music-list-footer-desc" v-if="musicListInfo.desc">
-            <span>{{ '简介：' + musicListInfo.desc }}</span>
+          <div class="music-list-footer-desc" v-if="listInfo.desc">
+            <span>{{ '简介：' + listInfo.desc }}</span>
           </div>
-          
         </div>
       </div>
 
-      <scroll 
-        class="music-list-scroll" 
+      <scroll
+        class="music-list-scroll"
         ref="playListScroll"
         v-loading="loading"
         element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading">
+        element-loading-spinner="el-icon-loading"
+      >
         <div>
           <div class="play-list-header">
             <i class="play-list-icon el-icon-video-play"></i>
@@ -44,7 +44,9 @@
             <div class="play-list-item-no">{{ index + 1 }}</div>
             <div class="play-list-item-info">
               <div class="play-list-item-name">{{ item.name }}</div>
-              <div class="play-list-item-artists">{{ item.artists.map(i => {return i.name}).join('/') }}</div>
+              <div class="play-list-item-artists">
+                {{ item.ar ? item.ar.map(i => {return i.name}).join('/'):item.artists.map(i => {return i.name}).join('/') }}
+              </div>
             </div>
             <div class="play-list-item-icon el-icon-video-play"></div>
           </div>
@@ -69,6 +71,7 @@ export default {
   },
   data() {
     return {
+      listInfo: []
     };
   },
   created() {},
@@ -76,6 +79,13 @@ export default {
     playList: get("musicLists/musicLists")
   },
   watch: {
+    musicListInfo: {
+      immediate: true,
+      handler(newVal) {
+        this.listInfo = newVal;
+      },
+      deep: true
+    }
     // playList: {
     //   immediate: true,
     //   handler(newVal) {
@@ -203,7 +213,7 @@ export default {
         flex: 1;
         width: 100%;
         overflow: hidden;
-          text-overflow: ellipsis;
+        text-overflow: ellipsis;
         .play-list-item-name {
           font-size: 17px;
           white-space: nowrap;

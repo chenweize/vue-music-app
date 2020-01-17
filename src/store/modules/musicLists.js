@@ -54,10 +54,10 @@ const actions = {
         try {
             const { status, payload } = await getMusicLists(params);
             if (status === 200) {
-                if (payload.result.tracks.length > 50) {
-                    commit('SET_MUSICLISTS', payload.result.tracks.slice(0, 50))
+                if (payload.playlist.tracks.length > 50) {
+                    commit('SET_MUSICLISTS', payload.playlist.tracks.slice(0, 50))
                 } else {
-                    commit('SET_MUSICLISTS', payload.result.tracks)
+                    commit('SET_MUSICLISTS', payload.playlist.tracks)
                 }
             } else {
                 // 如果加载失败, 就清空仓库的歌单数据
@@ -66,7 +66,7 @@ const actions = {
         } catch (e) {
             // 如果加载失败, 就清空仓库的歌单数据
             commit('SET_MUSICLISTS', [])
-            console.log("首页推荐轮播图加载失败: " + e);
+            console.log("歌单加载失败: " + e);
         }
     },
     // 加载歌手(默认加载热门歌手200个)

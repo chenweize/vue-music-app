@@ -114,6 +114,7 @@ export default {
     },
     // 点击歌单
     async onClickRecommendList(item) {
+      console.log(item)
       this.playListInfo = item; // 点击的歌单详情
       this.loading = true; // 给歌单添加加载效果
       this.$router.push({ path: `/recommend/${item.id}` }); // 跳转至歌单详情界面
