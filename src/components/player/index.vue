@@ -1,10 +1,18 @@
 <template>
-  <div class="music-app-player-container">
+  <div class="music-app-player-container" v-show="playlist.length > 0">
     <transition name="normal">
       <div class="normal-music-player" v-show="fullScreen" @touchstart.once="firstPlay">
         <div class="normal-music-player-bg">
           <div class="filter"></div>
           <img :src="currentSong.image" width="100%" height="100%" />
+        </div>
+
+        <div class="normal-music-player-top">
+          <div class="normal-music-player-back" @click="back">
+            <i class="music-player-arrow-down el-icon-arrow-down"></i>
+          </div>
+          <h1 class="normal-music-player-title" v-html="currentSong.name"></h1>
+          <h2 class="normal-music-player-subtitle" v-html="currentSong.singer"></h2>
         </div>
       </div>
     </transition>
@@ -105,6 +113,42 @@ export default {
         height: 100%;
         background: black;
         opacity: 0.6;
+      }
+    }
+    .normal-music-player-top {
+      position: relative;
+      margin-bottom: 25px;
+      .normal-music-player-back {
+        position: absolute;
+        top: 0;
+        left: 6px;
+        z-index: 50;
+        .music-player-arrow-down {
+          display: block;
+          padding: 5px 9px;
+          font-size: 35px;
+          // color: $color-theme-l;
+        }
+      }
+      .normal-music-player-title {
+        width: 70%;
+        margin: 0 auto;
+        padding-top: 10px;
+        line-height: 20px;
+        text-align: center;
+        // @include no-wrap();
+        font-size: 18px;
+        font-weight: bold;
+        color: rgb(241, 241, 241);
+      }
+      .normal-music-player-subtitle {
+        width: 70%;
+        margin: 0 auto;
+        line-height: 20px;
+        text-align: center;
+        // @include no-wrap();
+        font-size: 12px;
+        color: rgb(241, 241, 241);
       }
     }
   }

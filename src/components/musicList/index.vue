@@ -40,16 +40,7 @@
               <span>{{ '(共'+ playList.length +')' }}</span>
             </div>
           </div>
-          <div class="play-list-item" v-for="(item, index) in playList" :key="item.id">
-            <div class="play-list-item-no">{{ index + 1 }}</div>
-            <div class="play-list-item-info">
-              <div class="play-list-item-name">{{ item.name }}</div>
-              <div class="play-list-item-artists">
-                {{ item.ar ? item.ar.map(i => {return i.name}).join('/'):item.artists.map(i => {return i.name}).join('/') }}
-              </div>
-            </div>
-            <div class="play-list-item-icon el-icon-video-play"></div>
-          </div>
+          <songs-list :playList="playList"></songs-list>
         </div>
       </scroll>
     </div>
@@ -58,6 +49,7 @@
 
 <script>
 import Scroll from "@/common/scroll";
+import SongsList from "@/common/songsList";
 import { get } from "vuex-pathify";
 
 export default {
@@ -67,7 +59,8 @@ export default {
     loading: { type: Boolean, default: false }
   },
   components: {
-    Scroll
+    Scroll,
+    SongsList
   },
   data() {
     return {
@@ -196,41 +189,6 @@ export default {
           font-size: 15px;
           color: #888;
         }
-      }
-    }
-    .play-list-item {
-      display: flex;
-      width: 100%;
-      .play-list-item-no {
-        width: 40px;
-        font-size: 17px;
-        color: #999;
-        margin: auto 0;
-        text-align: center;
-      }
-      .play-list-item-info {
-        padding: 6px 0;
-        flex: 1;
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        .play-list-item-name {
-          font-size: 17px;
-          white-space: nowrap;
-          word-break: normal;
-        }
-        .play-list-item-artists {
-          font-size: 13px;
-          color: #888;
-          margin-top: 3px;
-          white-space: nowrap;
-          word-break: normal;
-        }
-      }
-      .play-list-item-icon {
-        color: #999;
-        margin: auto 20px;
-        font-size: 22px;
       }
     }
   }

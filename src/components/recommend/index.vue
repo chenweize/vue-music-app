@@ -123,7 +123,6 @@ export default {
     },
     // 点击新歌
     async onClickNewMusic(item) {
-      console.log(item)
       try {
         const res = await getLyric({ id: item.id })
         console.log(res)

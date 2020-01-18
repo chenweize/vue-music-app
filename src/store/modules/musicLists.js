@@ -11,7 +11,8 @@ var pinyin = require("pinyin");
 const state = {
     hots: [],
     musicLists: [],
-    singers: []
+    singers: [],
+    fullScreen: false
 }
 
 const mutations = {

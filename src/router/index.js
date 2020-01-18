@@ -13,7 +13,7 @@ export default new Router({
       // component: () => import('@/components/recommend')
     },
     {
-      // 
+      // 推荐页
       path: '/recommend',
       component: () => import('@/components/recommend'),
       children: [
