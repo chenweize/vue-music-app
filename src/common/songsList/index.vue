@@ -1,6 +1,6 @@
 <template>
   <div class="songs-list-container">
-    <div class="songs-list-item" v-for="(item, index) in playList" :key="item.id">
+    <div class="songs-list-item" v-for="(item, index) in playList" :key="item.id" @click="onClickListItem(index, item)">
       <div class="songs-list-item-no">{{ index + 1 }}</div>
       <div class="songs-list-item-info">
         <div class="songs-list-item-name">{{ item.name }}</div>
@@ -26,7 +26,11 @@ export default {
   data() {
       return {}
   },
-  methods: {}
+  methods: {
+    onClickListItem(index, item) {
+      this.$emit("clickItem", index, item)
+    }
+  }
 };
 </script>
 

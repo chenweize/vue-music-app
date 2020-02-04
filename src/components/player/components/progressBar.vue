@@ -16,6 +16,10 @@
 </template>
 
 <script>
+import {prefixStyle} from '@/utils/dom'
+const progressBtnWidth = 16
+const transform = prefixStyle('transform')
+
 export default {
   name: "ProgressBar",
   data() {
@@ -109,7 +113,7 @@ export default {
     .progress {
       position: absolute;
       height: 100%;
-      background: rgb(212, 68, 57);
+      background: #22d59c;
     }
     .progress-btn-wrapper {
       position: absolute;
@@ -126,7 +130,7 @@ export default {
         height: 16px;
         border: 5px solid rgb(241, 241, 241);
         border-radius: 50%;
-        background: rgb(212, 68, 57);
+        background: #22d59c;
       }
     }
   }

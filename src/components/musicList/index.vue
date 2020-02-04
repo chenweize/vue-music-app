@@ -34,13 +34,13 @@
       >
         <div>
           <div class="play-list-header">
-            <i class="play-list-icon el-icon-video-play"></i>
+            <i class="play-list-icon el-icon-video-play" @click="onClickPlayAll"></i>
             <div class="play-list-header-title">
               播放全部
-              <span>{{ '(共'+ playList.length +')' }}</span>
+              <span>{{ '(共'+ musicList.length +')' }}</span>
             </div>
           </div>
-          <songs-list :playList="playList"></songs-list>
+          <songs-list :playList="musicList" @clickItem="clickMusicItem"></songs-list>
         </div>
       </scroll>
     </div>
@@ -69,7 +69,7 @@ export default {
   },
   created() {},
   computed: {
-    playList: get("musicLists/musicLists")
+    musicList: get("musicLists/musicLists")
   },
   watch: {
     musicListInfo: {
@@ -79,17 +79,17 @@ export default {
       },
       deep: true
     }
-    // playList: {
-    //   immediate: true,
-    //   handler(newVal) {
-    //     $('.music-list-info-background').css({'background-image': 'url'(playList.coverImgUrl)})
-    //   }
-    // }
   },
   mounted() {},
   methods: {
     onClickBack() {
       this.$router.back();
+    },
+    onClickPlayAll() {
+      this.$store.dispatch('musicPlayer/setPlayList', this.musicList)
+    },
+    clickMusicItem(index, song) {
+      this.$store.dispatch('musicPlayer/setPlayList', song)
     }
   },
   destroyed() {}
