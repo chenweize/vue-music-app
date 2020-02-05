@@ -114,10 +114,10 @@ const actions = {
             const { status, payload } = await getSingerSongs(params);
             if (status === 200) {
                 // TODO: 数据格式暂时修改成 { id, artists, name }
-                const newList = payload.hotSongs.map(item => {
-                    return { id: item.id, artists: item.ar, name:item.name }
-                })
-                commit('SET_MUSICLISTS', newList)
+                // const newList = payload.hotSongs.map(item => {
+                //     return { id: item.id, artists: item.ar, name:item.name }
+                // })
+                commit('SET_MUSICLISTS', payload.hotSongs)
             } else {
                 // 如果加载失败, 就清空仓库的歌单数据
                 commit('SET_MUSICLISTS', [])
@@ -125,7 +125,7 @@ const actions = {
         } catch (e) {
             // 如果加载失败, 就清空仓库的歌单数据
             commit('SET_MUSICLISTS', [])
-            console.log("首页推荐轮播图加载失败: " + e);
+            console.log("歌手歌曲加载失败: " + e);
         }
     },
 }

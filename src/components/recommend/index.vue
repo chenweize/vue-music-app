@@ -53,7 +53,8 @@ import Scroll from "@/common/scroll";
 import {
   getBanner,
   getRecommendLists,
-  getRecommendNewSongs
+  getRecommendNewSongs,
+  getSongInfo
 } from "@/api/main-page";
 import { getLyric } from "@/api/player-page";
 import Slider from "@/common/slider";
@@ -123,10 +124,12 @@ export default {
     // 点击新歌
     async onClickNewMusic(item) {
       try {
-        const res = await getLyric({ id: item.id })
-        console.log(res)
+        const { status, payload } = await getSongInfo({ ids: item.id });
+        if (status == 200) {
+          this.$store.dispatch("musicPlayer/setPlayList", payload.songs);
+        }
       } catch (e) {
-        console.log('歌词获取失败: ' + e)
+        console.log("歌词获取失败: " + e);
       }
       // this.$router.push({ path: `/recommend/${item.id}` });
     }

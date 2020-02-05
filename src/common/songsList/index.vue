@@ -10,10 +10,16 @@
       </div>
       <div class="songs-list-item-icon el-icon-video-play"></div>
     </div>
+    <!-- 解决当迷你播放器出现时, 最底下的歌曲被遮挡BUG -->
+    <div class="songs-list-bottom" v-if="playLists.length&&!fullScreen">
+      
+    </div>
   </div>
 </template>
 
 <script>
+import { get } from "vuex-pathify";
+
 export default {
   name: "SongsList",
   props: {
@@ -25,6 +31,10 @@ export default {
   },
   data() {
       return {}
+  },
+  computed: {
+    playLists: get("musicPlayer/playList"),
+    fullScreen: get("musicPlayer/fullScreen")
   },
   methods: {
     onClickListItem(index, item) {
@@ -73,6 +83,11 @@ export default {
       margin: auto 20px;
       font-size: 22px;
     }
+  }
+  .songs-list-bottom {
+    position: relative;
+    width: 100%;
+    height: 60px;
   }
 }
 </style>

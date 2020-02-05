@@ -39,3 +39,13 @@ export function getRecommendNewSongs () {
     url
   })
 }
+
+// 获取推荐歌曲详情
+export function getSongInfo (params) {
+  const url = HOST + `/song/detail`
+  return http({
+    method: 'GET',
+    url,
+    params
+  })
+}

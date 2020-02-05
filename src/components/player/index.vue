@@ -42,7 +42,7 @@
               :data="currentLyric.lines"
             >
               <div class="player-middle-lyric">
-                <div class="currentLyric" v-if="currentLyric">
+                <div class="currentLyric" v-if="currentLyric.lines">
                   <p
                     ref="lyricLine"
                     class="text"
@@ -95,8 +95,26 @@
       </div>
     </transition>
     <transition name="mini">
-      <div class="mini-music-player" v-show="!fullScreen" @click="onClickMini"></div>
+      <div class="mini-music-player" v-show="!fullScreen" @click="onClickMini">
+        <div class="mini-player-icon">
+          <img :class="cdTransition" :src="currentSong.al.picUrl" width="45" height="45">
+        </div>
+        <div class="mini-player-text">
+          <h4 class="mini-player-name" v-html="currentSong.name"></h4>
+          <div class="mini-player-desc" v-html="currentSong.ar.map(a => { return a.name }).join('/')"></div>
+        </div>
+        <div class="mini-player-control" @click.stop="togglePlaying">
+          <progress-circle :radius="radius" :percent="percent">
+            <!-- <i class="icon-mini" :class="miniIcon" ></i> -->
+            <i class="iconfont mini-player-play" :class="miniIcon"></i>
+          </progress-circle>
+        </div>
+        <div class="mini-player-control" @click.stop="showPlayList">
+          <i class="iconfont icon-caidan"></i>
+        </div>
+      </div>
     </transition>
+    <play-lists @stopMusic="stopMusic" ref="playLists"></play-lists>
     <audio
       id="music-player-audio"
       ref="musicPlayerAudio"
@@ -113,10 +131,12 @@
 import Scroll from "@/common/scroll";
 import ProgressCircle from "./components/progressCricle";
 import ProgressBar from "./components/progressBar";
+import PlayLists from "./components/playList";
 import Lyric from "lyric-parser";
 import { getLyric, getSong } from "@/api/player-page";
 import { get, call } from "vuex-pathify";
 import { playMode } from "@/utils/config";
+import { shuffleList } from "@/utils/utl";
 
 export default {
   name: "MusicPlayer",
@@ -124,10 +144,12 @@ export default {
   components: {
     Scroll,
     ProgressCircle,
-    ProgressBar
+    ProgressBar,
+    PlayLists
   },
   data() {
     return {
+      radius: 32,
       songReady: false,
       songUrl: "", // 播放歌曲的地址
       currentShow: "cd", // 播放器中间部分当前显示样式 'cd': 专辑图片, 'lyric': 歌词
@@ -162,6 +184,9 @@ export default {
     },
     playIcon() {
       return this.playing ? "el-icon-video-pause" : "el-icon-video-play";
+    },
+    miniIcon () {
+      return this.playing ? 'icon-iconfront-' : 'icon-icon--'
     }
   },
   watch: {
@@ -206,9 +231,19 @@ export default {
       this.$store.dispatch("musicPlayer/setFullScreen", false);
       this.currentShow = "cd";
     },
+    // 点击迷你播放器
     onClickMini() {
       this.$store.dispatch("musicPlayer/setFullScreen", true);
     },
+    // 删除最后一首的时候暂停音乐
+    stopMusic () {  
+      this.$refs.musicPlayerAudio.pause()
+    },
+    // 显示播放列表
+    showPlayList () {
+      this.$refs.playLists.show()
+    },
+    // 显示/隐藏 cd/歌词
     changeMiddle() {
       if (this.currentShow === "cd") {
         this.currentShow = "lyric";
@@ -291,7 +326,7 @@ export default {
       let list = null;
       if (mode === playMode.random) {
         // list = shuffle(this.sequenceList)
-        list = this.shuffleList(this.playList);
+        list = shuffleList(this.playList);
       } else {
         // list = this.sequenceList
         list = this.playList;
@@ -316,6 +351,7 @@ export default {
         this.currentLyric.togglePlay();
       }
     },
+    // 下一首
     next() {
       if (!this.songReady) {
         return;
@@ -390,17 +426,6 @@ export default {
         return;
       }
       this.currentTime = e.target.currentTime;
-    },
-    // 随机打乱数组
-    shuffleList(list) {
-      let arr = list.slice(); // slice不会影响原来的数组，但是splice就会影响原来的arr数组
-      for (let i = 0; i < arr.length; i++) {
-        let j = Math.floor(Math.random()*(i - 0 + 1)) + 0;
-        let t = arr[i];
-        arr[i] = arr[j];
-        arr[j] = t;
-      }
-      return arr;
     }
   },
   destroyed() {}
@@ -647,6 +672,67 @@ export default {
     width: 100%;
     height: 60px;
     background: rgba(255, 255, 255, 0.85);
+    .mini-player-icon {
+      flex: 0 0 45px;
+      width: 45px;
+      padding: 0 10px 0 20px;
+      img {
+        border-radius: 50%;
+        &.play {
+          animation: rotate 10s linear infinite;
+        }
+        &.pause {
+          animation-play-state: paused;
+        }
+      }
+    }
+    .mini-player-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      overflow: hidden;
+      .mini-player-name {
+       margin-bottom: 2px;
+       line-height: 16px;
+       font-size: 16px;
+       margin: 0;
+       color: #2E3030;
+      }
+      .mini-player-desc {
+        font-size: 13px;
+        color: #2E3030;
+        margin-top: 3px;
+      }
+    }
+    .mini-player-control {
+      flex: 0 0 30px;
+      width: 30px;
+      padding: 0 10px;
+      .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
+        font-size: 28px;
+        color: rgba(19, 19, 19, 0.6);
+      }
+      .iconfont {
+        position: relative;
+        left: -5px;
+        top: -3px;
+      }
+      .icon-iconfront- {
+        color: #4c4c4c;
+        font-size: 22px;
+        position: absolute;
+        left: 5px;
+        top: 3px;
+      }
+      .icon-icon-- {
+        color: #4c4c4c;
+        font-size: 22px;
+        position: absolute;
+        left: 7px;
+        top: 4px;
+      }
+    }
     &.mini-enter-active,
     &.mini-leave-active {
       transition: all 0.4s;

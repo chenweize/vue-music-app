@@ -34,6 +34,27 @@
       "unicode_decimal": 58989
     },
     {
+      "icon_id": "3216207",
+      "name": "播放",
+      "font_class": "icon--",
+      "unicode": "e774",
+      "unicode_decimal": 59252
+    },
+    {
+      "icon_id": "5912740",
+      "name": "菜单",
+      "font_class": "caidan",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "8097443",
+      "name": "暂停",
+      "font_class": "iconfront-",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
       "icon_id": "8288959",
       "name": "爱心",
       "font_class": "aixin1",

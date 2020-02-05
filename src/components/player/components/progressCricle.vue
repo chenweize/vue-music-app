@@ -56,7 +56,7 @@ export default {
     }
     &.progress-bar {
       transform: scale(0.9) rotate(-90deg);
-      stroke: rgb(253, 108, 98);
+      stroke: #22d59c;
     }
   }
 }

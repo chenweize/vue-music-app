@@ -11,7 +11,7 @@ export function getLyric(params) {
     params
   })
 }
-// 获取歌词
+// 获取歌曲
 export function getSong(params) {
   const url = HOST + `/song/url`
   return http({

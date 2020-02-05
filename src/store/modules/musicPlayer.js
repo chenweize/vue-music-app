@@ -12,7 +12,6 @@ const state = {
   playing: false, // 播放状态
   fullScreen: false, // 全屏
   playList: [], // 播放列表
-  sequenceList: [], // 顺序列表(播放模式列表)  
   currentIndex: -1, // 当前播放索引
   // currentSong: {}, // 当前播放歌曲
 }
@@ -39,7 +38,6 @@ const mutations = {
   },
   SET_CURRENT_INDEX: (state, data) => {
     Vue.set(state, 'currentIndex', data)
-    console.log('currentIndex: ' + state.currentIndex)
   },
 }
 const actions = {
@@ -49,7 +47,7 @@ const actions = {
   },
   setPlayList({ state, commit }, data) {
     // 复制当前播放列表
-    let newList = Object.assign([], state.playlist)
+    let newList = Object.assign([], state.playList)
     // 如果是数组则将其跟播放列表拼接在首位
     if (Array.isArray(data)) {
       newList = data.concat(newList)
@@ -69,9 +67,31 @@ const actions = {
   setPlayMode({ state, commit }, data) {
     commit('SET_PLAY_MODE', data)
   },
+  // 修改当前播放序号
   setCurrentIndex({ state, commit }, data) {
     commit('SET_CURRENT_INDEX', data)
   },
+  // 删除播放列表歌曲
+  deletePlayListSong({ state, commit }, data) {
+    // 复制当前播放列表
+    let newList = Object.assign([], state.playList)
+    // 删除歌曲的序号
+    let index = newList.findIndex(item => {
+      return item.id === data.id;
+    });
+    // 如果是对象则说明是删除一首歌
+    if (is(Object, data)) {
+      newList.splice(index, 1)
+    }
+    // 删除播放列表所有歌曲
+    else {
+      newList = []
+      // 如果全部删除, 则停止播放
+      commit('SET_PLAY_STATUS', false)
+    }
+    commit('SET_CURRENT_INDEX', index)
+    commit('SET_PLAYLIST', newList) // 提交新播放列表
+  }
 }
 const getters = make.getters(state)
 

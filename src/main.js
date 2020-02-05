@@ -9,6 +9,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/icon/iconfont.css'
 import $ from 'jquery'
 import VueLazyload from 'vue-lazyload'
+import { MessageBox } from 'mint-ui'
+import 'mint-ui/lib/style.css'
  
 // 对封装完成的 axios, localStorage 全局引入
 // import Api from '@/utils/http.js';
@@ -19,6 +21,7 @@ Vue.prototype.$storage = storage;
 // 全局使用 elementui, VueLazyload
 Vue.use(ElementUI);
 Vue.use(VueLazyload)
+// Vue.use(MessageBox); // 使用 mint-ui 的对话框
 
 Vue.config.productionTip = false
 
