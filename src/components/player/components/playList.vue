@@ -27,10 +27,9 @@
               :key="item.id"
             >
               <i class="current" :class="getCurrentIcon(item)"></i>
-              <span
-                class="text"
-                :style="{ color: getCurrentText(item) }"
-              >{{ item.name + ' - ' + item.ar.map(a => { return a.name }).join('/') }}</span>
+              <span class="text" :style="{ color: getCurrentText(item) }">
+                  {{ item.name + ' - ' + item.ar.map(a => { return a.name }).join('/') }}
+              </span>
               <span class="delete" @click.stop="deletOne(item)">
                 <i class="delete-icon el-icon-close"></i>
               </span>
@@ -87,11 +86,9 @@ export default {
     setCurrentIndex: call("musicPlayer/setCurrentIndex"),
     deletePlayListSong: call("musicPlayer/deletePlayListSong"),
     showConfirm() {
-      MessageBox.confirm("是否清空当前播放列表?")
-        .then(() => {
-          this.confirmClear();
-        })
-        .catch(() => {});
+      MessageBox.confirm("是否清空当前播放列表?").then(() => {
+        this.confirmClear();
+      }).catch(() => {});
     },
     // 确认清空播放列表
     confirmClear() {
@@ -115,9 +112,6 @@ export default {
           return song.id === item.id;
         });
       }
-      // if (!this.playing) {
-      //   this.setPlayingState(true)
-      // }
       this.setCurrentIndex(index);
     },
     changeMode() {

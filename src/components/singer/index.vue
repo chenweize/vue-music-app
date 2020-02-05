@@ -16,7 +16,7 @@
         >
           <div class="music-singer-list-title">{{ singer.title }}</div>
           <div class="music-singer-item" v-for="item in singer.items" :key="item.id" @click="onClickSinger(item)">
-            <img class="music-singer-item-avatar" v-lazy="item.avatar" />
+            <img class="music-singer-item-avatar" v-lazy.container="item.avatar" />
             <div class="music-singer-item-info">
               <span class="music-singer-item-name">{{ item.name }}</span>
             </div>
