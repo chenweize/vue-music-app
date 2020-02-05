@@ -4,16 +4,19 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 
 <script>
 import Header from '@/components/header'
+import Player from '@/components/player'
 
 export default {
   name: 'App',
   components: {
-    Header
+    Header,
+    Player
   }
 }
 </script>

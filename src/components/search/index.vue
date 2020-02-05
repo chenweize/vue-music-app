@@ -1,146 +1,143 @@
 <template>
-  <div class="music-app-search-container">
-    <div class="music-search-box">
-      <!-- <router-link tag="div" class="music-back" to="/"> -->
-      <i style="color: #fff;" class="music-back el-icon-back" @click="onClickBack"></i>
-      <!-- </router-link> -->
-      <el-input
-        class="search-input"
-        placeholder="请输入内容"
-        v-model="searchWords"
-        @blur="onBlur"
-        @focus="onFocus"
-      >
-        <i
-          v-if="searchWords"
-          slot="suffix"
-          style="color: #fff;"
-          class="el-input__icon el-icon-circle-close"
-          @click="onClickClearWords"
-        ></i>
-        <i
-          v-else
-          slot="suffix"
-          style="color: #fff;"
-          class="el-input__icon el-icon-search"
-          @click="onClickSearchMusic"
-        ></i>
-      </el-input>
-    </div>
+  <transition name="searchMusic">
+    <div class="music-app-search-container">
+      <div class="music-search-box">
+        <!-- <router-link tag="div" class="music-back" to="/"> -->
+        <i class="music-back el-icon-back" @click="onClickBack"></i>
+        <!-- </router-link> -->
+        <el-input class="search-input" ref="searchInput" placeholder="请输入内容" v-model="searchWords">
+          <i
+            v-if="searchWords"
+            slot="suffix"
+            style="color: #fff;"
+            class="el-input__icon el-icon-circle-close"
+            @click="onClickClearWords"
+          ></i>
+          <i
+            v-else
+            slot="suffix"
+            style="color: #fff;"
+            class="el-input__icon el-icon-search"
+            @click="onClickSearchMusic"
+          ></i>
+        </el-input>
+      </div>
 
-    <scroll class="music-search-scroll" ref="searchScroll">
-      <!-- better-scroll 只对容器内第一个div实现滚动效果 -->
-      <div ref="search">
-        <div class="music-search-info" v-if="!searchWords">
+      <scroll class="music-search-scroll" ref="searchScroll">
+        <!-- better-scroll 只对容器内第一个div实现滚动效果 -->
+        <div ref="search">
+          <div class="music-search-info" v-if="!searchWords">
+            <div class="search-hots">
+              <div class="search-hots-title">热门搜索</div>
+              <span
+                class="search-hots-item"
+                v-for="(item, index) in hots"
+                :key="index"
+              >{{ item.first }}</span>
+            </div>
+
+            <div class="search-history">
+              <div class="search-history-title">
+                <span>历史搜索</span>
+                <i style="float: right;" class="el-icon-delete" @click="onClearSearchRerords()"></i>
+              </div>
+              <div
+                class="search-history-item"
+                v-for="(item, index) of searchRecords"
+                :key="index"
+                @click="onClickSearchRerords(item)"
+              >
+                <i slot="suffix" class="history-item-icon el-icon-time"></i>
+                <span class="history-item-title">{{ item }}</span>
+                <i
+                  slot="prefix"
+                  class="history-item-icon el-icon-close"
+                  @click="onClearSearchRerords(item)"
+                ></i>
+              </div>
+            </div>
+          </div>
+
           <div
-            class="search-hots"
-            v-loading="searchHotLoading"
+            class="music-search-result"
+            v-else
+            v-loading="loading"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
           >
-            <div class="search-hots-title">热门搜索</div>
-            <span
-              class="search-hots-item"
-              v-for="(item, index) in hots"
-              :key="index"
-            >{{ item.first }}</span>
-          </div>
-
-          <div class="search-history">
-            <div class="search-history-title">
-              <span>历史搜索</span>
-              <i style="float: right;" class="el-icon-delete" @click="onClearSearchRerords()"></i>
+            <div class="search-result-item" v-if="singers.length > 0">
+              <div class="search-result-item-title">歌手</div>
+              <div
+                class="search-result-item-singer"
+                v-for="singer in singers"
+                :key="singer.id"
+                @click="onClickSearchSingers(singer)"
+              >
+                <el-avatar
+                  class="result-singer-avatar"
+                  shape="square"
+                  :size="50"
+                  :src="singer.picUrl"
+                ></el-avatar>
+                <div class="result-singer-info">
+                  <p class="result-singer-name">{{ '歌手: ' + singer.name }}</p>
+                </div>
+              </div>
             </div>
-            <div
-              class="search-history-item"
-              v-for="(item, index) of searchRecords"
-              :key="index"
-              @click="onClearSearchRerords(item)"
-            >
-              <i slot="suffix" class="history-item-icon el-icon-time"></i>
-              <span class="history-item-title">{{ item }}</span>
-              <i slot="prefix" class="history-item-icon el-icon-close"></i>
+
+            <div class="search-result-item" v-if="playlists.length > 0">
+              <div class="search-result-item-title">歌单</div>
+              <div
+                class="search-result-item-playlist"
+                v-for="list in playlists"
+                :key="list.id"
+                @click="onClickSearchList(list)"
+              >
+                <el-avatar
+                  class="result-playlist-avatar"
+                  shape="square"
+                  :size="50"
+                  :src="list.coverImgUrl"
+                ></el-avatar>
+                <div class="result-playlist-info">
+                  <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="search-result-item" v-if="songs.length > 0">
+              <div class="search-result-item-title">歌曲</div>
+              <div
+                class="search-result-item-song"
+                v-for="song in songs"
+                :key="song.id"
+                @click="onClickSearchSongs(song)"
+              >
+                <div class="result-song-info">
+                  <span class="result-song-name">{{ song.name }}</span>
+                  <span class="result-song-atrister">{{ song.artists[0].name }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="isNullResult || isErrResult" class="search-result-item error-search">
+              <span v-if="isNullResult">暂时没找到相关搜索结果</span>
+              <span v-if="isErrResult">搜索异常, 请稍后重试</span>
             </div>
           </div>
         </div>
-
-        <div
-          class="music-search-result"
-          v-else
-          v-loading="searchResultLoading"
-          element-loading-text="拼命加载中"
-          element-loading-spinner="el-icon-loading"
-        >
-          <div class="search-result-item" v-if="singers.length > 0">
-            <div class="search-result-item-title">歌手</div>
-            <div
-              class="search-result-item-singer"
-              v-for="singer in singers"
-              :key="singer.id"
-              @click="onClickSearchItem(singer)"
-            >
-              <el-avatar
-                class="result-singer-avatar"
-                shape="square"
-                :size="50"
-                :src="singer.picUrl"
-              ></el-avatar>
-              <div class="result-singer-info">
-                <p class="result-singer-name">{{ '歌手: ' + singer.name }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="search-result-item" v-if="playlists.length > 0">
-            <div class="search-result-item-title">歌单</div>
-            <div
-              class="search-result-item-playlist"
-              v-for="list in playlists"
-              :key="list.id"
-              @click="onClickSearchItem(list)"
-            >
-              <el-avatar
-                class="result-playlist-avatar"
-                shape="square"
-                :size="50"
-                :src="list.coverImgUrl"
-              ></el-avatar>
-              <div class="result-playlist-info">
-                <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="search-result-item" v-if="songs.length > 0">
-            <div class="search-result-item-title">歌曲</div>
-            <div
-              class="search-result-item-song"
-              v-for="song in songs"
-              :key="song.id"
-              @click="onClickSearchItem(song)"
-            >
-              <div class="result-song-info">
-                <span class="result-song-name">{{ song.name }}</span>
-                <span class="result-song-atrister">{{ song.artists[0].name }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="search-result-item error-search">
-            <span v-if="isNullResult">暂时没找到相关搜索结果</span>
-            <span v-if="isErrResult">搜索异常, 请稍后重试</span>
-          </div>
-        </div>
-      </div>
-    </scroll>
-  </div>
+      </scroll>
+      <router-view :musicListInfo="musicListInfo" :loading="musicListLoading"></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
 import Scroll from "@/common/scroll";
-import { getHots, getSearchByKeyWords, getAlbumInfo } from "@/api/search-page";
+import { getSearchByKeyWords } from "@/api/search-page";
+import { getSingerInfo } from "@/api/singer-page";
 import { isNil, isEmpty } from "ramda";
-import defaultAlbumImg from "@/assets/defualt_album.jpg";
+import { get } from "vuex-pathify";
 
 let timer = null; // 设置计时器防抖
 
@@ -154,13 +151,13 @@ export default {
     return {
       pullup: true,
       searchWords: "", // 搜索关键词
-      cancelShow: false, // 是否显示取消字段
-      hots: [], // 热门搜索
-      searchHotLoading: false, // 热门搜索loading效果
-      searchResultLoading: false, // 搜索结果loading效果
+      loading: false, // 搜索结果loading效果
       singers: [],
       playlists: [],
       songs: [],
+      musicListInfo: {}, // 歌单内容
+      musicListLoading: false, // 歌单loading效果
+      singerInfo: {}, // 歌手个人信息
       isNullResult: false, // 搜索结果是否为空
       isErrResult: false, // 搜索过程是否出错
       searchRecords: [] // 搜索记录
@@ -175,15 +172,18 @@ export default {
   // 每次进入该页面的时候触发 activated()
   activated() {
     this.searchWords = ""; // 清空搜索内容
+    this.$refs.searchInput.focus(); // 将输入框设为聚焦状态
   },
-  computed: {},
+  computed: {
+    hots: get("musicLists/hots") // 热门搜索
+  },
   watch: {
     async searchWords(value) {
-      this.searchResultLoading = true;
+      this.loading = true;
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         if (value == "" || isNil(value)) {
-          this.searchResultLoading = false;
+          this.loading = false;
         } else {
           this.getSearchResult();
         }
@@ -209,50 +209,38 @@ export default {
     onClickClearWords() {
       this.searchWords = "";
     },
-    // 当搜索框聚焦时
-    onFocus() {
-      this.cancelShow = true;
-    },
-    // 当搜索框失焦时
-    onBlur() {
-      this.cancelShow = false;
-    },
     // 获取热门搜索
     async getHotSearchInfo() {
-      this.searchHotLoading = true;
-      try {
-        const { status, payload } = await getHots();
-        if (status == 200) {
-          this.hots = payload.result.hots;
-        }
-        this.searchHotLoading = false;
-      } catch (e) {
-        this.searchHotLoading = false;
-        console.log("热门搜索获取失败: " + e);
-      }
+      this.$store.dispatch("musicLists/loadHots");
+    },
+    // 点击搜索记录
+    onClickSearchRerords(item) {
+      this.searchWords = item;
     },
     // 获取关键词搜索结果
     async getSearchResult() {
       const params = { keywords: this.searchWords };
-      this.isNullResult = false // 重置搜索结果是否为空
-      this.isErrResult = false // 重置是否搜索过程出错
+      this.isNullResult = false; // 重置搜索结果是否为空
+      this.isErrResult = false; // 重置是否搜索过程出错
       try {
         const { status, payload } = await getSearchByKeyWords(params);
         if (status == 200) {
           this.singers = payload.result.artists ? payload.result.artists : [];
-          this.playlists = payload.result.playlists ? payload.result.playlists : [];
+          this.playlists = payload.result.playlists
+            ? payload.result.playlists
+            : [];
           this.songs = payload.result.songs ? payload.result.songs : [];
           // 搜索结果为空时处理
           if (isEmpty(payload.result)) {
-            this.isNullResult = true
+            this.isNullResult = true;
           }
           // 动态更新滚动条高度
           this.refreshScroll();
         }
-        this.searchResultLoading = false;
+        this.loading = false;
       } catch (e) {
         this.isErrResult = true;
-        this.searchResultLoading = false;
+        this.loading = false;
         console.log("相关搜索结果获取失败: " + e);
       }
     },
@@ -261,24 +249,92 @@ export default {
         this.$refs.searchScroll.refresh();
       });
     },
-    // 点击搜索结果
-    onClickSearchItem(item) {
-      // 将搜索关键词存进搜索记录中
+    // 存储历史记录
+    setHistoryRecord() {
       if (this.searchRecords.indexOf(this.searchWords) == -1) {
         this.searchRecords.unshift(this.searchWords);
-        this.$storage.setStorageItem("search_history_of_music", this.searchRecords);
+        this.$storage.setStorageItem(
+          "search_history_of_music",
+          this.searchRecords
+        );
       }
     },
+    // TODO: 点击歌手搜索结果
+    async onClickSearchSingers(item) {
+      console.log(item)
+      this.setHistoryRecord(); // 存储历史记录
+      this.musicListLoading = true; // 给歌单添加加载效果
+      // 点击的歌单详情
+      // this.musicListInfo = item
+      this.loadSingerInfo(item)
+      this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
+      await this.$store.dispatch("musicLists/loadSingerSongs", { id: item.id }); // await 等待函数执行完成
+      this.musicListLoading = false; // 无论函数执行成功或失败, 都显示loading状态
+    },
+    // 点击歌单搜索结果
+    async onClickSearchList(item) {
+      this.setHistoryRecord(); // 存储历史记录
+      // 点击的歌单详情
+      this.musicListInfo = {
+        id: item.id,
+        name: item.name,
+        picUrl: item.coverImgUrl,
+        playCount: item.playCount
+      };
+      this.musicListLoading = true; // 给歌单添加加载效果
+      this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
+      await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
+      this.musicListLoading = false; // 无论函数执行成功或失败, 都显示loading状态
+    },
+    // 点击歌曲搜索结果
+    async onClickSearchSongs(item) {
+      this.setHistoryRecord(); // 存储历史记录
+      // 点击的歌单详情
+      this.musicListInfo = {
+        id: item.id,
+        name: item.name,
+        picUrl: item.coverImgUrl,
+        playCount: item.playCount
+      };
+      this.musicListLoading = true; // 给歌单添加加载效果
+      this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
+      await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
+      this.musicListLoading = false; // 无论函数执行成功或失败, 都显示loading状态
+    },
+    // 加载歌手信息
+    async loadSingerInfo(singer) {
+      try {
+        // 获取歌手简介
+        const { status, payload } = await getSingerInfo({ id: singer.id })
+        if (status === 200) {
+          // 处理歌手基本信息
+          this.musicListInfo = Object.assign({}, 
+            singer, 
+            {
+              desc: payload.briefDesc.split('。')[0]
+            }
+          )
+        }
+      } catch (e) {
+        console.log('歌手详情获取失败: ' + e)
+      }
+    },
+
     // 删除搜索历史记录
     onClearSearchRerords(item = "") {
       // 如果存在item, 即说明是点击删除单个记录
       if (item) {
-        this.searchRecords = this.searchRecords.filter(record => record != item)
-        this.$storage.setStorageItem("search_history_of_music",this.searchRecords);
+        this.searchRecords = this.searchRecords.filter(
+          record => record != item
+        );
+        this.$storage.setStorageItem(
+          "search_history_of_music",
+          this.searchRecords
+        );
       } else {
         // 删除所有记录
-        this.searchRecords = []
-        this.$storage.removeStorageItem("search_history_of_music")
+        this.searchRecords = [];
+        this.$storage.removeStorageItem("search_history_of_music");
       }
     }
   },
@@ -302,6 +358,7 @@ export default {
     align-items: center;
     .music-back {
       font-size: 20px;
+      color: #fff;
       margin: 0 10px;
     }
     .search-input {
@@ -312,6 +369,7 @@ export default {
         line-height: 30px;
         border-radius: 30px;
         font-size: 13px;
+        color: #fff;
         border: 1px solid #fff;
         background-color: #22d59c;
       }
@@ -473,5 +531,14 @@ export default {
       }
     }
   }
+}
+.searchMusic-enter-active,
+.searchMusic-leave-active {
+  transition: all 0.3s;
+}
+.searchMusic-enter,
+.searchMusic-leave-to {
+  transform: translate3d(50%, 0, 0);
+  opacity: 0;
 }
 </style>
