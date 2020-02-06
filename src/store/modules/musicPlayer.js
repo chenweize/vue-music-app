@@ -13,7 +13,8 @@ const state = {
   fullScreen: false, // 全屏
   playList: [], // 播放列表
   currentIndex: -1, // 当前播放索引
-  playHistory: [] // 历史播放记录
+  playHistory: [], // 历史播放记录
+  favoriteList: [] // 我喜欢歌单
   // currentSong: {}, // 当前播放歌曲
 }
 
@@ -43,6 +44,9 @@ const mutations = {
   SET_PLAY_HISTORY: (state, data) => {
     Vue.set(state, 'playHistory', data)
   },
+  SET_MY_FAVORITE: (state, data) => {
+    Vue.set(state, 'favoriteList', data)
+  }
 }
 const actions = {
   ...make.actions(state),
@@ -108,14 +112,35 @@ const actions = {
         history.splice(index, 1) // 删除 1个 下标从 index 开始的元素
         history.unshift(data) // 将这首歌插入历史播放记录首位
       } else {
-        history.splice(49, 1)
+        history.splice(history.length - 1, 1)
         history.unshift(data)
       }
     } else {
+      // 解决初次加载为数组时插入会出现BUG
       history = data
     }
     commit('SET_PLAY_HISTORY', history)
     return history ? history : []
+  },
+  // 存储我喜欢歌曲
+  setFavorite({ state, commit }, data) {
+    let favorite = Object.assign([], state.favoriteList)
+    if (!Array.isArray(data)) {
+      favorite.unshift(data)
+    } else {
+      favorite = data
+    }
+    commit('SET_MY_FAVORITE', favorite)
+    return favorite ? favorite : []
+  },
+  // 删除我喜欢的歌曲
+  deleteFavorite({ state, commit }, data) {
+    let favorite = Object.assign([], state.favoriteList)
+    let index = favorite.findIndex(item => {
+      return item.id === data.id;
+    });
+    favorite.splice(index, 1)
+    commit('SET_MY_FAVORITE', favorite)
   }
 }
 const getters = make.getters(state)

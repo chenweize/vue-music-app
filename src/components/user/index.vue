@@ -4,7 +4,7 @@
       <div class="music-user-top">
         <i class="music-back el-icon-back" @click="() => { this.$router.back() }"></i>
         <div class="music-user-top-switch">
-          <p class="user-switch-favorite" @click="onClickFavorite">我的收藏</p>
+          <p class="user-switch-favorite" @click="onClickFavorite">我喜欢</p>
           <p class="user-switch-recent" @click="onClickRecent">最近播放</p>
         </div>
       </div>
@@ -13,14 +13,14 @@
         <i class="play-action-icon el-icon-video-play"></i>
         <div class="music-user-player-title" @click="onClickPlayAll">
           播放全部
-          <span>(共{{ switchIndex ? favariteList.length : playHistory.length }}首)</span>
+          <span>(共{{ switchIndex ? favoriteList.length : playHistory.length }}首)</span>
         </div>
       </div>
 
       <div class="music-user-playlist">
         <scroll ref="favoriteList" class="user-musiclist-scroll" v-if="switchIndex">
           <div>
-            <songs-list :playList="playList" @clickItem="onClickItem"></songs-list>
+            <songs-list :playList="favoriteList" @clickItem="onClickItem"></songs-list>
           </div>
         </scroll>
         <scroll ref="recentList" class="user-musiclist-scroll" v-else>
@@ -52,15 +52,15 @@ export default {
   },
   data() {
     return {
-      switchIndex: 0, // 选择默认 0 (近期播放), 1 为我的收藏
+      switchIndex: 0, // 选择默认 0 (近期播放), 1 为我喜欢
       noResult: false,
-      favariteList: []
     };
   },
   created() {},
   computed: {
     playList: get("musicLists/musicLists"),
-    playHistory: get("musicPlayer/playHistory")
+    playHistory: get("musicPlayer/playHistory"),
+    favoriteList: get("musicPlayer/favoriteList")
   },
   watch: {
     switchIndex: {
@@ -71,7 +71,7 @@ export default {
           $(".user-switch-favorite").addClass("checked");
           $(".user-switch-recent").removeClass("checked");
           // 判断我喜欢列表是否存在歌曲, 不存在的话就显示相应提示
-          this.favariteList.length > 0 ? this.noResult = false : this.noResult = true
+          this.favoriteList.length > 0 ? this.noResult = false : this.noResult = true
         } else {
           $(".user-switch-favorite").removeClass("checked");
           $(".user-switch-recent").addClass("checked");
@@ -81,7 +81,7 @@ export default {
     }
   },
   methods: {
-    // 点击 '我的收藏'
+    // 点击 '我的喜欢'
     onClickFavorite() {
       this.switchIndex = 1;
     },
@@ -97,7 +97,7 @@ export default {
       }
       // 播放 '我喜欢' 的歌单
       if (this.switchIndex === 1) {
-        this.$store.dispatch('musicPlayer/setPlayList', this.musicList)
+        this.$store.dispatch('musicPlayer/setPlayList', this.favoriteList)
       }
     },
     onClickItem(index, song) {
