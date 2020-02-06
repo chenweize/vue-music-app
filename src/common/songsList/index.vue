@@ -4,9 +4,9 @@
       <div class="songs-list-item-no">{{ index + 1 }}</div>
       <div class="songs-list-item-info">
         <div class="songs-list-item-name">{{ item.name }}</div>
-        <div
-          class="songs-list-item-artists"
-        >{{ item.ar ? item.ar.map(i => {return i.name}).join('/'):item.artists.map(i => {return i.name}).join('/') }}</div>
+        <div class="songs-list-item-artists">
+          {{ item.ar ? item.ar.map(i => {return i.name}).join('/') : item.artists.map(i => {return i.name}).join('/') }}
+        </div>
       </div>
       <div class="songs-list-item-icon el-icon-video-play"></div>
     </div>

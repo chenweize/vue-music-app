@@ -85,7 +85,7 @@
             </div>
             <div class="player-operators-icon i-right">
               <i
-                class="iconfont icon-aixin"
+                class="iconfont"
                 @click="toggleFavorite(currentSong)"
                 :class="getFavoriteIcon(currentSong)"
               ></i>
@@ -162,6 +162,7 @@ export default {
   },
   created() {
     this.move = false;
+    this.getUserPlayList()
   },
   computed: {
     fullScreen: get("musicPlayer/fullScreen"),
@@ -170,6 +171,7 @@ export default {
     playing: get("musicPlayer/playing"),
     currentSong: get("currentSong"),
     currentIndex: get("musicPlayer/currentIndex"),
+    favoriteList: get("musicPlayer/favoriteList"),
     cdTransition() {
       return this.playing ? "play" : "play pause";
     },
@@ -386,13 +388,31 @@ export default {
       }
       this.songReady = false;
     },
-    toggleFavorite() {},
-
+    // 点击我喜欢图标
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.$store.dispatch('musicPlayer/deleteFavorite', song)
+        // 存放到 localStorage 中
+        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+      } else {
+        this.$store.dispatch('musicPlayer/setFavorite', song)
+        // 存放到 localStorage 中
+        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+      }
+    },
+    // 获取我喜欢图标
     getFavoriteIcon(song) {
-      // if (this.isFavorite(song)) {
-      //   return 'icon-like'
-      // }
-      // return 'icon-dislike'
+      if (this.isFavorite(song)) {
+        return 'icon-aixin1'
+      }
+      return 'icon-aixin'
+    },
+    // 判断当前播放歌曲是否是'我喜欢'
+    isFavorite (song) {
+      const index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id
+      })
+      return index > -1
     },
     firstPlay() {
       this.$refs.musicPlayerAudio.play();
@@ -415,10 +435,9 @@ export default {
     ready() {
       this.songReady = true;
       // TODO: 保存历史播放记录
-      // this.savePlayHistory(this.currentSong)
+      this.savePlayHistory(this.currentSong)
     },
     error() {
-      console.log("error");
       this.songReady = true;
     },
     updateTime(e) {
@@ -426,6 +445,22 @@ export default {
         return;
       }
       this.currentTime = e.target.currentTime;
+    },
+    // 获取历史播放记录与我喜欢, 并存储
+    getUserPlayList() {
+      // filter 是用来解决BUG localStorage 在没获取到对应数据是返回 false 
+      const history = this.$storage.getStorageItem("play_history_of_music").filter(i => { return i!==false });
+      const favorite = this.$storage.getStorageItem("my_favorite_of_music").filter(i => { return i!==false });
+      this.$store.dispatch('musicPlayer/setPlayHistory', history)
+      this.$store.dispatch('musicPlayer/setFavorite', favorite)
+    },
+    // 保存播放歌曲的历史记录
+    savePlayHistory(song) {
+      // 存到 store 中
+      this.$store.dispatch('musicPlayer/setPlayHistory', song).then((history) => {
+        // 存放到 localStorage 中
+        this.$storage.setStorageItem("play_history_of_music", history);
+      }).catch(e => {})
     }
   },
   destroyed() {}
