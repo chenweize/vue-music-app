@@ -3,7 +3,7 @@
  */
 import Vue from 'vue'
 import { make } from "vuex-pathify"
-import { is } from "ramda"
+import { is, indexOf } from "ramda"
 import { playMode } from "@/utils/config"
 
 const state = {
@@ -13,6 +13,7 @@ const state = {
   fullScreen: false, // 全屏
   playList: [], // 播放列表
   currentIndex: -1, // 当前播放索引
+  playHistory: [] // 历史播放记录
   // currentSong: {}, // 当前播放歌曲
 }
 
@@ -39,6 +40,9 @@ const mutations = {
   SET_CURRENT_INDEX: (state, data) => {
     Vue.set(state, 'currentIndex', data)
   },
+  SET_PLAY_HISTORY: (state, data) => {
+    Vue.set(state, 'playHistory', data)
+  },
 }
 const actions = {
   ...make.actions(state),
@@ -50,7 +54,8 @@ const actions = {
     let newList = Object.assign([], state.playList)
     // 如果是数组则将其跟播放列表拼接在首位
     if (Array.isArray(data)) {
-      newList = data.concat(newList)
+      // newList = data.concat(newList)
+      newList = data
     }
     // 如果是对象就插入播放列表最后一首
     else if (is(Object, data)) {
@@ -91,6 +96,26 @@ const actions = {
     }
     commit('SET_CURRENT_INDEX', index)
     commit('SET_PLAYLIST', newList) // 提交新播放列表
+  },
+  // 存储历史播放歌曲
+  setPlayHistory({ state, commit }, data) {
+    let history = Object.assign([], state.playHistory)
+    if (!Array.isArray(data)) {
+      let index = indexOf(data, history)
+      // index 大于 -1 说明当前播放歌曲存在历史播放中, 则将这首歌放在历史播放记录首位
+      // 如果等于 -1 说明当前播放歌曲不存在历史播放中, 则插入历史播放记录首位，并删除最后一首
+      if (index > -1) {
+        history.splice(index, 1) // 删除 1个 下标从 index 开始的元素
+        history.unshift(data) // 将这首歌插入历史播放记录首位
+      } else {
+        history.splice(49, 1)
+        history.unshift(data)
+      }
+    } else {
+      history = data
+    }
+    commit('SET_PLAY_HISTORY', history)
+    return history ? history : []
   }
 }
 const getters = make.getters(state)

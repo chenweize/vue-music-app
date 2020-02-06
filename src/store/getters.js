@@ -1,6 +1,6 @@
 const getters = {
     musicLists: state => state.musicLists,
-    player: state => state.musicPlayer,
+    musicPlayer: state => state.musicPlayer,
     currentSong: state => {
         return state.musicPlayer.playList?state.musicPlayer.playList[state.musicPlayer.currentIndex] : {}
     }

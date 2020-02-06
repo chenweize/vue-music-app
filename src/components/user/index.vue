@@ -11,21 +11,21 @@
 
       <div class="music-user-player">
         <i class="play-action-icon el-icon-video-play"></i>
-        <div class="music-user-player-title">
+        <div class="music-user-player-title" @click="onClickPlayAll">
           播放全部
-          <span>(共{{0}}首)</span>
+          <span>(共{{ switchIndex ? favariteList.length : playHistory.length }}首)</span>
         </div>
       </div>
 
       <div class="music-user-playlist">
         <scroll ref="favoriteList" class="user-musiclist-scroll" v-if="switchIndex">
           <div>
-            <songs-list :playList="playList"></songs-list>
+            <songs-list :playList="playList" @clickItem="onClickItem"></songs-list>
           </div>
         </scroll>
         <scroll ref="recentList" class="user-musiclist-scroll" v-else>
           <div>
-            <songs-list :playList="playList"></songs-list>
+            <songs-list :playList="playHistory" @clickItem="onClickItem"></songs-list>
           </div>
         </scroll>
       </div>
@@ -53,12 +53,14 @@ export default {
   data() {
     return {
       switchIndex: 0, // 选择默认 0 (近期播放), 1 为我的收藏
-      noResult: false
+      noResult: false,
+      favariteList: []
     };
   },
   created() {},
   computed: {
-    playList: get("musicLists/musicLists")
+    playList: get("musicLists/musicLists"),
+    playHistory: get("musicPlayer/playHistory")
   },
   watch: {
     switchIndex: {
@@ -68,19 +70,38 @@ export default {
         if (newVal) {
           $(".user-switch-favorite").addClass("checked");
           $(".user-switch-recent").removeClass("checked");
+          // 判断我喜欢列表是否存在歌曲, 不存在的话就显示相应提示
+          this.favariteList.length > 0 ? this.noResult = false : this.noResult = true
         } else {
           $(".user-switch-favorite").removeClass("checked");
           $(".user-switch-recent").addClass("checked");
+          this.playHistory.length > 0  ? this.noResult = false : this.noResult = true
         }
       }
     }
   },
   methods: {
+    // 点击 '我的收藏'
     onClickFavorite() {
       this.switchIndex = 1;
     },
+    // 点击 '最近播放'
     onClickRecent() {
       this.switchIndex = 0;
+    },
+    // 点击播放全部
+    onClickPlayAll() {
+      // 播放 最近播放 的所有歌曲
+      if (this.switchIndex === 0) {
+        this.$store.dispatch('musicPlayer/setPlayList', this.playHistory)
+      }
+      // 播放 '我喜欢' 的歌单
+      if (this.switchIndex === 1) {
+        this.$store.dispatch('musicPlayer/setPlayList', this.musicList)
+      }
+    },
+    onClickItem(index, song) {
+      this.$store.dispatch('musicPlayer/setPlayList', song)
     }
   }
 };
@@ -181,7 +202,7 @@ export default {
       }
       span {
         font-size: 15px;
-        color: #2e3030;
+        color: #6c6c6c;
       }
     }
   }

@@ -162,6 +162,7 @@ export default {
   },
   created() {
     this.move = false;
+    this.getPlayHistory()
   },
   computed: {
     fullScreen: get("musicPlayer/fullScreen"),
@@ -415,7 +416,7 @@ export default {
     ready() {
       this.songReady = true;
       // TODO: 保存历史播放记录
-      // this.savePlayHistory(this.currentSong)
+      this.savePlayHistory(this.currentSong)
     },
     error() {
       console.log("error");
@@ -426,6 +427,19 @@ export default {
         return;
       }
       this.currentTime = e.target.currentTime;
+    },
+    // 获取历史播放记录, 并存储
+    getPlayHistory() {
+      const history = this.$storage.getStorageItem("play_history_of_music");
+      this.$store.dispatch('musicPlayer/setPlayHistory', history)
+    },
+    // 保存播放歌曲的历史记录
+    savePlayHistory(song) {
+      // 存到 store 中
+      this.$store.dispatch('musicPlayer/setPlayHistory', song).then((history) => {
+        // 存放到 localStorage 中
+        this.$storage.setStorageItem("play_history_of_music", history);
+      }).catch(e => {})
     }
   },
   destroyed() {}
