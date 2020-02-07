@@ -3,7 +3,7 @@
  */
 import Vue from 'vue'
 import { make } from "vuex-pathify"
-import { is, indexOf } from "ramda"
+import { is, indexOf, uniq } from "ramda"
 import { playMode } from "@/utils/config"
 
 const state = {
@@ -24,13 +24,13 @@ const mutations = {
     state.fullScreen = data
   },
   SET_PLAYLIST: (state, data) => {
-    // 利用set特性把数组的数据去重
-    const newData = [...new Set(data)]
+    // 利用 uniq 把数组的数据去重
+    const newData = uniq(data)
     Vue.set(state, 'playList', newData)
     // 播放列表更新完成后, 将列表第一首歌设为当前歌曲
-    if (state.mode !== 2) {
-      Vue.set(state, 'currentIndex', 0)
-    }
+    // if (state.mode !== 2) {
+    //   Vue.set(state, 'currentIndex', 0)
+    // }
   },
   SET_PLAY_STATUS: (state, flag) => {
     Vue.set(state, 'playing', flag)
@@ -91,6 +91,14 @@ const actions = {
     // 如果是对象则说明是删除一首歌
     if (is(Object, data)) {
       newList.splice(index, 1)
+      // 若删除的是当前播放歌曲之前的歌曲, 把当前播放序号 -1
+      // 若删除的是当前播放歌曲之后的歌曲, 就不改变前播放序号
+      if (index < state.currentIndex) {
+        index = state.currentIndex - 1
+      }
+      if (index > state.currentIndex) {
+        index = state.currentIndex
+      }
     }
     // 删除播放列表所有歌曲
     else {
@@ -112,7 +120,11 @@ const actions = {
         history.splice(index, 1) // 删除 1个 下标从 index 开始的元素
         history.unshift(data) // 将这首歌插入历史播放记录首位
       } else {
-        history.splice(history.length - 1, 1)
+        // 如果近期播放歌曲超过50首, 删除最后一首
+        if(history.length > 49) {
+          history.splice(49, 1)
+        }
+        // history.splice(history.length - 1, 1)
         history.unshift(data)
       }
     } else {

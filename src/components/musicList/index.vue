@@ -10,7 +10,7 @@
         <div class="music-list-info-header">
           <i class="music-back el-icon-back" @click="onClickBack"></i>
           <div class="music-list-header-text">
-            <span>歌单</span>
+            <span>{{ definedTitle }}</span>
           </div>
         </div>
         <div class="music-list-info-footer">
@@ -28,6 +28,9 @@
       <scroll
         class="music-list-scroll"
         ref="playListScroll"
+        @scroll="onScroll"
+        :probe-type="probeType"
+        :listen-scroll="listenScroll"
         v-loading="loading"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
@@ -56,7 +59,9 @@ export default {
   name: "MusicList",
   props: {
     musicListInfo: { type: Object, default: () => {} },
-    loading: { type: Boolean, default: false }
+    definedTitle: { type: String, default: '歌单' },
+    loading: { type: Boolean, default: false },
+    loadMore: { type: Boolean, default: false }
   },
   components: {
     Scroll,
@@ -64,12 +69,16 @@ export default {
   },
   data() {
     return {
-      listInfo: []
+      listInfo: [],
+      scrollY: 0,
+      probeType: 3,
+      listenScroll: true
     };
   },
   created() {},
   computed: {
-    musicList: get("musicLists/musicLists")
+    musicList: get("musicLists/musicLists"),
+    mode: get("musicPlayer/mode")
   },
   watch: {
     musicListInfo: {
@@ -78,6 +87,17 @@ export default {
         this.listInfo = newVal;
       },
       deep: true
+    },
+    scrollY(newY) {
+      if (this.loadMore && this.musicList.length > 49) {
+        let scrollHeight = $(".music-list-scroll").outerHeight();
+        let listHeight = $(".music-list-scroll div").outerHeight();
+        if (listHeight - Math.abs(newY) - scrollHeight < 90) {
+          this.debounce(() => {
+            this.$emit('loadMoreData', this.musicList.length)
+          }, 20);
+        }
+      } 
     }
   },
   mounted() {},
@@ -86,10 +106,25 @@ export default {
       this.$router.back();
     },
     onClickPlayAll() {
-      this.$store.dispatch('musicPlayer/setPlayList', this.musicList)
+      this.$store.dispatch("musicPlayer/setPlayList", this.musicList);
+      // 非随机模式时播放第一首歌曲
+      if (this.mode !== 2) {
+        this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
+      }
     },
     clickMusicItem(index, song) {
-      this.$store.dispatch('musicPlayer/setPlayList', song)
+      this.$store.dispatch("musicPlayer/setCurrentIndex", 0)
+      this.$store.dispatch("musicPlayer/setPlayList", song);
+    },
+    onScroll(position) {
+      this.scrollY = position.y;
+    },
+    // 防抖动
+    debounce(fn, wait) {
+      if (this.fun !== null) {
+        clearTimeout(this.fun);
+      }
+      this.fun = setTimeout(fn, wait);
     }
   },
   destroyed() {}

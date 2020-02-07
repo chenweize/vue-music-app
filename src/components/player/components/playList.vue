@@ -21,16 +21,16 @@
           <transition-group name="list" tag="div">
             <div
               class="item"
-              ref="listItem"
+              ref="playListItem"
               @click="selectItem(item, index)"
               v-for="(item, index) in playList"
-              :key="item.id"
+              :key="getKey(item)"
             >
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text" :style="{ color: getCurrentText(item) }">
                   {{ item.name + ' - ' + item.ar.map(a => { return a.name }).join('/') }}
               </span>
-              <span class="delete" @click.stop="deletOne(item)">
+              <span class="delete" @click.stop="deletOne(item, index)">
                 <i class="delete-icon el-icon-close"></i>
               </span>
             </div>
@@ -114,6 +114,7 @@ export default {
       }
       this.setCurrentIndex(index);
     },
+    // 修改播放模式
     changeMode() {
       const mode = (this.mode + 1) % 3;
       this.setPlayMode(mode);
@@ -133,6 +134,7 @@ export default {
       });
       this.setCurrentIndex(index);
     },
+    // 删除播放列表一首歌曲
     deletOne(item) {
       this.deletePlayListSong(item);
       if (!this.playList.length) {
@@ -150,11 +152,21 @@ export default {
     hide() {
       this.showFlag = false;
     },
+    // 定位到当前播放歌曲位置
     scrollToCurrent(current) {
       const index = this.playList.findIndex(song => {
         return current.id === song.id;
       });
-      this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300);
+      let songEl = $('.item').eq(index)[0];
+      this.$refs.listContent.scrollToElement(songEl, 300);
+    },
+    // 生成独一无二的key
+    getKey(item) {
+      let uniqueID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      })
+      return uniqueID
     }
   }
 };

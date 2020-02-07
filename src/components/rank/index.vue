@@ -2,7 +2,7 @@
   <div class="music-app-rank-container">
     <scroll class="music-rank-scroll" ref="rankScroll">
       <div class="music-rank-list">
-        <div class="music-rank-list-item" v-for="item in rankList" :key="item.id" @click="onClickRankItem(item)">
+        <div class="music-rank-list-item" v-for="item in rankList" :key="getKey(item)" @click="onClickRankItem(item)">
           <el-avatar
             class="music-rank-item-avatar"
             shape="square"
@@ -10,7 +10,7 @@
             :src="item.coverImgUrl"
           ></el-avatar>
           <div class="music-rank-item-info">
-            <div class="music-rank-item-title" v-for="(track, index) in item.tracks" :key="index">
+            <div class="music-rank-item-title" v-for="(track, index) in item.tracks" :key="getKey(index)">
               <span>{{ (index + 1) + '. ' 
                 + (track.first ? track.first : track.name) + ' - '
                 + (track.second ? track.second : track.ar.map(a => {return a.name}).join("/")) }}
@@ -79,6 +79,14 @@ export default {
       this.$router.push({ path: `/rank/${item.id}` }); // 跳转至歌单详情界面
       await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
       this.loading = false // 无论函数执行成功或失败, 都显示loading状态
+    },
+    // 生成独一无二的key
+    getKey(item) {
+      let uniqueID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      })
+      return uniqueID
     }
   }
 };

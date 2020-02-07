@@ -32,7 +32,7 @@
               <span
                 class="search-hots-item"
                 v-for="(item, index) in hots"
-                :key="index"
+                :key="index + parseInt(Math.random(0,1)*100000)"
               >{{ item.first }}</span>
             </div>
 
@@ -44,7 +44,7 @@
               <div
                 class="search-history-item"
                 v-for="(item, index) of searchRecords"
-                :key="index"
+                :key="index + parseInt(Math.random(0,1)*100000)"
                 @click="onClickSearchRerords(item)"
               >
                 <i slot="suffix" class="history-item-icon el-icon-time"></i>
@@ -70,7 +70,7 @@
               <div
                 class="search-result-item-singer"
                 v-for="singer in singers"
-                :key="singer.id"
+                :key="singer.id + parseInt(Math.random(0,1)*100000)"
                 @click="onClickSearchSingers(singer)"
               >
                 <el-avatar
@@ -90,7 +90,7 @@
               <div
                 class="search-result-item-playlist"
                 v-for="list in playlists"
-                :key="list.id"
+                :key="list.id + parseInt(Math.random(0,1)*100000)"
                 @click="onClickSearchList(list)"
               >
                 <el-avatar
@@ -110,7 +110,7 @@
               <div
                 class="search-result-item-song"
                 v-for="song in songs"
-                :key="song.id"
+                :key="song.id + parseInt(Math.random(0,1)*100000)"
                 @click="onClickSearchSongs(song)"
               >
                 <div class="result-song-info">
@@ -135,6 +135,7 @@
 <script>
 import Scroll from "@/common/scroll";
 import { getSearchByKeyWords } from "@/api/search-page";
+import { getSongInfo } from "@/api/main-page";
 import { getSingerInfo } from "@/api/singer-page";
 import { isNil, isEmpty } from "ramda";
 import { get } from "vuex-pathify";
@@ -259,9 +260,8 @@ export default {
         );
       }
     },
-    // TODO: 点击歌手搜索结果
+    // 点击歌手搜索结果
     async onClickSearchSingers(item) {
-      console.log(item)
       this.setHistoryRecord(); // 存储历史记录
       this.musicListLoading = true; // 给歌单添加加载效果
       // 点击的歌单详情
@@ -289,17 +289,14 @@ export default {
     // 点击歌曲搜索结果
     async onClickSearchSongs(item) {
       this.setHistoryRecord(); // 存储历史记录
-      // 点击的歌单详情
-      this.musicListInfo = {
-        id: item.id,
-        name: item.name,
-        picUrl: item.coverImgUrl,
-        playCount: item.playCount
-      };
-      this.musicListLoading = true; // 给歌单添加加载效果
-      this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
-      await this.$store.dispatch("musicLists/loadMusicList", { id: item.id }); // await 等待函数执行完成
-      this.musicListLoading = false; // 无论函数执行成功或失败, 都显示loading状态
+      try {
+        const { status, payload } = await getSongInfo({ ids: item.id });
+        if (status == 200) {
+          this.$store.dispatch("musicPlayer/setPlayList", payload.songs[0]);
+        }
+      } catch (e) {
+        console.log("歌曲获取失败: " + e);
+      }
     },
     // 加载歌手信息
     async loadSingerInfo(singer) {
@@ -327,10 +324,7 @@ export default {
         this.searchRecords = this.searchRecords.filter(
           record => record != item
         );
-        this.$storage.setStorageItem(
-          "search_history_of_music",
-          this.searchRecords
-        );
+        this.$storage.setStorageItem("search_history_of_music", this.searchRecords);
       } else {
         // 删除所有记录
         this.searchRecords = [];

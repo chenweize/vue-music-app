@@ -13,7 +13,7 @@
             <div
               class="music-lists-item"
               v-for="item in recommendLists"
-              :key="item.id"
+              :key="item.id+parseInt(Math.random(0,1)*100000)"
               @click="onClickRecommendList(item)"
             >
               <span class="lists-item-hot">
@@ -32,7 +32,7 @@
             <div
               class="music-lists-item"
               v-for="item in newSongs"
-              :key="item.id"
+              :key="item.id + parseInt(Math.random(0,1)*100000)"
               @click="onClickNewMusic(item)"
             >
               <el-image class="lists-item-img" fit="fill" :src="item.picUrl"></el-image>
@@ -126,10 +126,10 @@ export default {
       try {
         const { status, payload } = await getSongInfo({ ids: item.id });
         if (status == 200) {
-          this.$store.dispatch("musicPlayer/setPlayList", payload.songs);
+          this.$store.dispatch("musicPlayer/setPlayList", payload.songs[0]);
         }
       } catch (e) {
-        console.log("歌词获取失败: " + e);
+        console.log("歌曲获取失败: " + e);
       }
       // this.$router.push({ path: `/recommend/${item.id}` });
     }
