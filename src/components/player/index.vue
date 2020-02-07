@@ -39,17 +39,17 @@
               class="normal-player-middle-r"
               ref="lyricList"
               v-show="currentShow === 'lyric'"
-              :data="currentLyric.lines"
             >
               <div class="player-middle-lyric">
-                <div class="currentLyric" v-if="currentLyric.lines">
+                <div class="currentLyric" v-if="currentLyric">
+                  <!-- :class="{'current': currentLineNum === index}" -->
                   <p
                     ref="lyricLine"
                     class="text"
-                    v-for="(line, index) in currentLyric.lines"
-                    :class="{'current': currentLineNum === index}"
-                    :key="line.time"
-                  >{{line.txt}}</p>
+                    v-for="(line, index) in currentLyric"
+                    :key="getKey(index)"
+                    :class="{ 'current': currentLineNum == index }"
+                  >{{line}}</p>
                 </div>
                 <p class="no-lyric" v-if="currentLyric === null">暂无歌词</p>
                 <!-- <p class="no-lyric" v-if="currentLyric === null">{{upDatecurrentLyric}}</p> -->
@@ -104,7 +104,7 @@
           <div class="mini-player-desc" v-html="currentSong.ar.map(a => { return a.name }).join('/')"></div>
         </div>
         <div class="mini-player-control" @click.stop="togglePlaying">
-          <progress-circle :radius="radius" :percent="percent">
+          <progress-circle :radius="32" :percent="percent">
             <!-- <i class="icon-mini" :class="miniIcon" ></i> -->
             <i class="iconfont mini-player-play" :class="miniIcon"></i>
           </progress-circle>
@@ -132,11 +132,11 @@ import Scroll from "@/common/scroll";
 import ProgressCircle from "./components/progressCricle";
 import ProgressBar from "./components/progressBar";
 import PlayLists from "./components/playList";
-import Lyric from "lyric-parser";
 import { getLyric, getSong } from "@/api/player-page";
 import { get, call } from "vuex-pathify";
 import { playMode } from "@/utils/config";
 import { shuffleList } from "@/utils/utl";
+import { Toast } from 'mint-ui';
 
 export default {
   name: "MusicPlayer",
@@ -149,13 +149,13 @@ export default {
   },
   data() {
     return {
-      radius: 32,
       songReady: false,
       songUrl: "", // 播放歌曲的地址
       currentShow: "cd", // 播放器中间部分当前显示样式 'cd': 专辑图片, 'lyric': 歌词
       currentLyric: "", // 当前歌曲的歌词
       currentLineNum: 0, // 当前歌词
       currentTime: 0, // 当前时间
+      currentLyricTime: [],
       duration: 0, // 歌曲时长
       percent: 0 // 播放进度
     };
@@ -209,18 +209,39 @@ export default {
       deep: true
     },
     songUrl(newVal) {
-      this.loadMusicLyric(this.currentSong.id);
-      this.$refs.musicPlayerAudio.src = newVal;
-      let stop = setInterval(() => {
-        this.duration = this.$refs.musicPlayerAudio.duration;
-        if (this.duration) {
-          clearInterval(stop);
-        }
-      }, 50);
-      this.setPlayingState(true);
+      // TODO: 处理付费歌词提示
+      if(newVal) {
+        this.loadMusicLyric(this.currentSong.id);
+        this.$refs.musicPlayerAudio.src = newVal;
+        let stop = setInterval(() => {
+          this.duration = this.$refs.musicPlayerAudio.duration;
+          if (this.duration) {
+            clearInterval(stop);
+          }
+        }, 50);
+        this.setPlayingState(true);
+      } else {
+        Toast({
+          message: `这首歌为付费歌曲, 自动为您播放下一首`,
+          duration: 3000
+        });
+        setTimeout(()=>{this.next()}, 3000)
+      }
+      
     },
-    currentTime() {
+    currentTime(time) {
       this.percent = this.currentTime / this.duration;
+      // 实时定位高亮歌词
+      if(this.currentLyricTime.indexOf(parseInt(time)) > -1) {
+        this.currentLineNum = this.currentLyricTime.indexOf(parseInt(time))
+        // 让高亮歌词位于中间位置
+        if (this.currentLineNum > 4) {
+          let lineEl = this.$refs.lyricLine[this.currentLineNum - 4];
+          this.$refs.lyricList.scrollToElement(lineEl, 1000);
+        } else {
+          this.$refs.lyricList.scrollTo(0, 0, 1000);
+        }
+      }
     }
   },
   mounted() {},
@@ -252,7 +273,6 @@ export default {
       } else {
         this.currentShow = "cd";
       }
-      // console.log(this.currentShow)
     },
     // 获取当前歌曲
     async getCurrentSong(id) {
@@ -263,33 +283,53 @@ export default {
     },
     // 加载当前歌曲歌词
     async loadMusicLyric(id) {
+      this.currentLyricTime = [] // 每次加载新歌词时清空上一首歌词对应时间
       try {
         const { status, payload } = await getLyric({ id });
         if (status == 200) {
-          this.currentLyric = new Lyric(payload.lrc.lyric, this.handleLyric);
+          this.handleCurrentLyric(payload.lrc.lyric)
+          // console.log(this.currentLyric)
           // 歌词重载以后 高亮行设置为 0
           this.currentLineNum = 0;
           this.$refs.lyricList.scrollTo(0, 0, 1000);
         }
-
-        console.log(this.currentLyric);
       } catch (e) {
+        this.currentLyricTime = []
         this.currentLyric = null;
         this.currentLineNum = 0;
         console.log("歌词获取失败: " + e);
       }
     },
     // 处理歌词
-    handleLyric({ lineNum, txt }) {
-      // let lineNum  = this.currentLyric.curNum
-      this.currentLineNum = lineNum;
-      // 实时跟踪定位高亮歌词
-      if (lineNum > 4) {
-        let lineEl = this.$refs.lyricLine[lineNum - 4];
-        this.$refs.lyricList.scrollToElement(lineEl, 1000);
-      } else {
-        this.$refs.lyricList.scrollTo(0, 0, 1000);
-      }
+    handleCurrentLyric(lyric) {
+      const timeRegExp = /\[(\d+:\d+\.\d+)\]/;
+      let array = lyric.split("\n");
+      // 过滤掉空歌词
+      let Lyric = array.filter(a => {
+        let wordsStr = a.split(']')[1]
+        if(wordsStr) return wordsStr
+      })
+      // 处理当前歌词
+      let currentLyric = Lyric.map(a => {
+        return a.split(']')[1]
+      })
+      this.currentLyric = currentLyric
+      // 处理当前歌词时间
+      let currentLyricTime = Lyric.map(a => {
+        return this.handleTime(timeRegExp.exec(a)[1])
+      })
+      this.currentLyricTime = currentLyricTime
+      this.$nextTick()
+    },
+    // 处理歌词时间
+    handleTime(time) {
+      let res = time.split(":");
+      let minites = parseInt(res[0])*60;
+      let seconds = parseFloat(res[1]);
+      // Number()把函数对象转换为数字,toFixed(n)保留n位小数，因为toFixed(n)的使用,把time再次变为字符串，故用parseInt再转化
+      // parseInt() 取整是方便提前定位歌词位置
+      let resTime = parseInt(Number(minites+seconds).toFixed(2))
+      return resTime
     },
     // 格式化时间
     formatTime(time = 0) {
@@ -301,7 +341,7 @@ export default {
       }
       return minute + ":" + second;
     },
-    // TODO: 播放模式进行
+    // 播放模式进行
     percentChangeEnd(percent) {
       this.move = false;
       const currentTime = this.duration * percent;
@@ -310,17 +350,12 @@ export default {
         this.$refs.musicPlayerAudio.play();
         this.setPlayingState(true);
       }
-      if (this.currentLyric) {
-        this.currentLyric.seek(currentTime * 1000);
-      }
     },
+    // 点击播放进度条
     percentChange(percent) {
       this.move = true;
       const currentTime = this.duration * percent;
       this.currentTime = currentTime;
-      if (this.currentLyric) {
-        this.currentLyric.seek(currentTime * 1000);
-      }
     },
     changeMode() {
       const mode = (this.mode + 1) % 3;
@@ -373,6 +408,7 @@ export default {
       }
       this.songReady = false;
     },
+    // 上一首
     prev() {
       if (!this.songReady) {
         return;
@@ -418,6 +454,7 @@ export default {
       this.$refs.musicPlayerAudio.play();
     },
     end() {
+      this.currentLineNum = 0
       if (this.mode === playMode.loop) {
         this.loop();
       } else {
@@ -428,13 +465,10 @@ export default {
     loop() {
       this.$refs.musicPlayerAudio.currentTime = 0;
       this.$refs.musicPlayerAudio.play();
-      if (this.currentLyric) {
-        this.currentLyric.seek();
-      }
     },
     ready() {
       this.songReady = true;
-      // TODO: 保存历史播放记录
+      // 保存历史播放记录
       this.savePlayHistory(this.currentSong)
     },
     error() {
@@ -461,6 +495,14 @@ export default {
         // 存放到 localStorage 中
         this.$storage.setStorageItem("play_history_of_music", history);
       }).catch(e => {})
+    },
+    // 生成独一无二的key
+    getKey(item) {
+      let uniqueID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      })
+      return uniqueID
     }
   },
   destroyed() {}
@@ -727,6 +769,8 @@ export default {
       justify-content: center;
       flex: 1;
       overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       .mini-player-name {
        margin-bottom: 2px;
        line-height: 16px;

@@ -11,11 +11,11 @@
         <div
           class="music-singer-list"
           v-for="singer in singers"
-          :key="singer.title"
+          :key="singer.title + parseInt(Math.random(0,1)*100000).toString()"
           ref="singerListGroup"
         >
           <div class="music-singer-list-title">{{ singer.title }}</div>
-          <div class="music-singer-item" v-for="item in singer.items" :key="item.id" @click="onClickSinger(item)">
+          <div class="music-singer-item" v-for="item in singer.items" :key="item.id + parseInt(Math.random(0,1)*100000).toString()" @click="onClickSinger(item)">
             <img class="music-singer-item-avatar" v-lazy.container="item.avatar" />
             <div class="music-singer-item-info">
               <span class="music-singer-item-name">{{ item.name }}</span>
@@ -28,13 +28,13 @@
         <div
           class="music-singer-shortcut-item"
           v-for="(item, index) in shortcutList"
-          :key="item.id"
+          :key="item.id + parseInt(Math.random(0,1)*100000).toString()"
           :data-index="index"
           :class="{'current': currentIndex === index}"
         >{{ item }}</div>
       </div>
     </scroll>
-    <router-view :musicListInfo="singerInfo" :loading="loading"></router-view>
+    <router-view :musicListInfo="singerInfo" :loading="loading" :definedTitle="title"></router-view>
   </div>
 </template>
 
@@ -55,6 +55,7 @@ export default {
     return {
       singerInfo: {}, // 歌手基本信息
       loading: false,
+      title: '热门歌曲',
       listenScroll: true, // 滚动条相关参数
       probeType: 3, // 滚动条相关参数
       touch: {}, // 滚动条相关参数
@@ -73,13 +74,7 @@ export default {
       return this.singers.map(item => {
         return item.title.substr(0, 1);
       });
-    },
-    // fixedTitle() {
-    //   if (this.scrollY > 0) {
-    //     return "";
-    //   }
-    //   return this.singers[this.currentIndex] ? this.singers[this.currentIndex].title : "";
-    // }
+    }
   },
   watch: {
     singers() {

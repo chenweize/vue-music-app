@@ -1,6 +1,6 @@
 <template>
   <div class="songs-list-container">
-    <div class="songs-list-item" v-for="(item, index) in playList" :key="item.id" @click="onClickListItem(index, item)">
+    <div class="songs-list-item" v-for="(item, index) in playList" :key="getKey(item.id)" @click="onClickListItem(index, item)">
       <div class="songs-list-item-no">{{ index + 1 }}</div>
       <div class="songs-list-item-info">
         <div class="songs-list-item-name">{{ item.name }}</div>
@@ -11,14 +11,14 @@
       <div class="songs-list-item-icon el-icon-video-play"></div>
     </div>
     <!-- 解决当迷你播放器出现时, 最底下的歌曲被遮挡BUG -->
-    <div class="songs-list-bottom" v-if="playLists.length&&!fullScreen">
-      
+    <div class="songs-list-bottom" >
+      ~~ 我是有底线的 ~~
     </div>
   </div>
 </template>
 
 <script>
-import { get } from "vuex-pathify";
+import { getKey } from "@/utils/utl"
 
 export default {
   name: "SongsList",
@@ -32,13 +32,18 @@ export default {
   data() {
       return {}
   },
-  computed: {
-    playLists: get("musicPlayer/playList"),
-    fullScreen: get("musicPlayer/fullScreen")
-  },
+  computed: {},
   methods: {
     onClickListItem(index, item) {
       this.$emit("clickItem", index, item)
+    },
+    // 生成独一无二的key
+    getKey(item) {
+      let uniqueID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      })
+      return uniqueID
     }
   }
 };
@@ -88,6 +93,9 @@ export default {
     position: relative;
     width: 100%;
     height: 60px;
+    text-align: center;
+    line-height: 60px;
+    color: #969696;
   }
 }
 </style>
