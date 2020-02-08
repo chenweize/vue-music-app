@@ -10,8 +10,8 @@
       </div>
 
       <div class="music-user-player">
-        <i class="play-action-icon el-icon-video-play"></i>
-        <div class="music-user-player-title" @click="onClickPlayAll">
+        <i class="play-action-icon el-icon-video-play" @click="onClickPlayAll"></i>
+        <div class="music-user-player-title">
           播放全部
           <span>(共{{ switchIndex ? favoriteList.length : playHistory.length }}首)</span>
         </div>
@@ -94,14 +94,17 @@ export default {
       // 播放 最近播放 的所有歌曲
       if (this.switchIndex === 0) {
         this.$store.dispatch('musicPlayer/setPlayList', this.playHistory)
+        this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
       }
       // 播放 '我喜欢' 的歌单
       if (this.switchIndex === 1) {
         this.$store.dispatch('musicPlayer/setPlayList', this.favoriteList)
+        this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
       }
     },
     onClickItem(index, song) {
       this.$store.dispatch('musicPlayer/setPlayList', song)
+      this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
     }
   }
 };

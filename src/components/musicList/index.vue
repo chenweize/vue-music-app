@@ -113,8 +113,8 @@ export default {
       }
     },
     clickMusicItem(index, song) {
-      this.$store.dispatch("musicPlayer/setCurrentIndex", 0)
       this.$store.dispatch("musicPlayer/setPlayList", song);
+      this.$store.dispatch("musicPlayer/setCurrentIndex", 0)
     },
     onScroll(position) {
       this.scrollY = position.y;
