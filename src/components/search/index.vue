@@ -33,6 +33,7 @@
                 class="search-hots-item"
                 v-for="(item, index) in hots"
                 :key="index + parseInt(Math.random(0,1)*100000)"
+                @click="onClickHotItem(item.first)"
               >{{ item.first }}</span>
             </div>
 
@@ -119,6 +120,8 @@
                 </div>
               </div>
             </div>
+            <!-- 用来解决迷你播放器挡住最后一个搜索结果 -->
+            <div class="search-result-item-bottom" v-if="playlists.length&&singers.length&&songs.length"></div>
 
             <div v-if="isNullResult || isErrResult" class="search-result-item error-search">
               <span v-if="isNullResult">暂时没找到相关搜索结果</span>
@@ -218,6 +221,10 @@ export default {
     onClickSearchRerords(item) {
       this.searchWords = item;
     },
+    // 点击热门搜索
+    onClickHotItem(hot) {
+      this.searchWords = hot
+    },
     // 获取关键词搜索结果
     async getSearchResult() {
       const params = { keywords: this.searchWords };
@@ -293,6 +300,7 @@ export default {
         const { status, payload } = await getSongInfo({ ids: item.id });
         if (status == 200) {
           this.$store.dispatch("musicPlayer/setPlayList", payload.songs[0]);
+          this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
         }
       } catch (e) {
         console.log("歌曲获取失败: " + e);
@@ -316,7 +324,6 @@ export default {
         console.log('歌手详情获取失败: ' + e)
       }
     },
-
     // 删除搜索历史记录
     onClearSearchRerords(item = "") {
       // 如果存在item, 即说明是点击删除单个记录
@@ -522,6 +529,14 @@ export default {
             }
           }
         }
+      }
+      .search-result-item-bottom {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+        color: #969696;
       }
     }
   }
