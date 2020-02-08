@@ -127,6 +127,7 @@ export default {
         const { status, payload } = await getSongInfo({ ids: item.id });
         if (status == 200) {
           this.$store.dispatch("musicPlayer/setPlayList", payload.songs[0]);
+          this.$store.dispatch("musicPlayer/setCurrentIndex", 0)
         }
       } catch (e) {
         console.log("歌曲获取失败: " + e);
