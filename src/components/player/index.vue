@@ -1,19 +1,18 @@
 <template>
   <div class="music-app-player-container" v-if="playList.length > 0">
     <transition name="normal">
+      <!-- HTML5 中, PC 端基于鼠标的界面互动主要是单击(click), 移动端界面交互方式主要是触摸(touch) -->
+      <!-- touchstart: 触摸开始时触发 -->
       <div class="normal-music-player" v-show="fullScreen" @touchstart.once="firstPlay">
         <div class="normal-music-player-bg">
           <div class="filter"></div>
           <img :src="currentSong.al.picUrl" width="100%" height="100%" />
-          <!-- <img :src="playList[0].al.picUrl" width="100%" height="100%" /> -->
         </div>
 
         <div class="normal-music-player-top">
           <div class="normal-music-player-back" @click="onClickDown">
             <i class="music-player-arrow-down el-icon-arrow-down"></i>
           </div>
-          <!-- <h1 class="normal-music-player-title" v-html="currentSong.name"></h1>
-          <h2 class="normal-music-player-subtitle" v-html="currentSong.singer"></h2>-->
           <h1 class="normal-music-player-title" v-html="currentSong.name"></h1>
           <h2
             class="normal-music-player-subtitle"
@@ -27,14 +26,12 @@
               <div class="normal-player-cd">
                 <div class="cd" :class="cdTransition">
                   <img :src="currentSong.al.picUrl" class="image" />
-                  <!-- <img :src="playList[0].al.picUrl" class="image" /> -->
                 </div>
               </div>
             </div>
           </transition>
 
           <transition name="middleR">
-            <!-- <scroll class="middle-r" ref="lyricList" v-show="currentShow === 'lyric'" :data="currentLyric"> -->
             <scroll
               class="normal-player-middle-r"
               ref="lyricList"
@@ -42,7 +39,6 @@
             >
               <div class="player-middle-lyric">
                 <div class="currentLyric" v-if="currentLyric">
-                  <!-- :class="{'current': currentLineNum === index}" -->
                   <p
                     ref="lyricLine"
                     class="text"
@@ -52,7 +48,6 @@
                   >{{line}}</p>
                 </div>
                 <p class="no-lyric" v-if="currentLyric === null">暂无歌词</p>
-                <!-- <p class="no-lyric" v-if="currentLyric === null">{{upDatecurrentLyric}}</p> -->
               </div>
             </scroll>
           </transition>
@@ -86,8 +81,8 @@
             <div class="player-operators-icon i-right">
               <i
                 class="iconfont"
-                @click="toggleFavorite(currentSong)"
                 :class="getFavoriteIcon(currentSong)"
+                @click="toggleFavorite(currentSong)"
               ></i>
             </div>
           </div>
@@ -105,7 +100,6 @@
         </div>
         <div class="mini-player-control" @click.stop="togglePlaying">
           <progress-circle :radius="32" :percent="percent">
-            <!-- <i class="icon-mini" :class="miniIcon" ></i> -->
             <i class="iconfont mini-player-play" :class="miniIcon"></i>
           </progress-circle>
         </div>
@@ -221,9 +215,10 @@ export default {
         }, 50);
         this.setPlayingState(true);
       } else {
+        // 提示
         Toast({
-          message: `这首歌为付费歌曲, 自动为您播放下一首`,
-          duration: 3000
+          message: `这首歌为付费歌曲, 自动为您播放下一首`, // 提示信息
+          duration: 3000 // 持续时间
         });
         setTimeout(()=>{this.next()}, 3000)
       }
@@ -297,7 +292,7 @@ export default {
         this.currentLyricTime = []
         this.currentLyric = null;
         this.currentLineNum = 0;
-        console.log("歌词获取失败: " + e);
+        console.error("歌词获取失败: " + e);
       }
     },
     // 处理歌词
@@ -427,13 +422,29 @@ export default {
     // 点击我喜欢图标
     toggleFavorite(song) {
       if (this.isFavorite(song)) {
-        this.$store.dispatch('musicPlayer/deleteFavorite', song)
-        // 存放到 localStorage 中
-        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+        this.$store.dispatch('musicPlayer/deleteFavorite', song).then((index) => {
+          // index > -1 表示这首歌属于 我喜欢
+          if (index > -1) {
+            // 存放到 localStorage 中
+            this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList)
+            Toast({
+              message: `已从我喜欢列表移除`,
+              duration: 1500
+            });
+          }
+        }).catch(e => {})
       } else {
-        this.$store.dispatch('musicPlayer/setFavorite', song)
-        // 存放到 localStorage 中
-        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+        this.$store.dispatch('musicPlayer/setFavorite', song).then((favorite) => {
+          // favorite >0 表示我喜欢存储成功
+          if (favorite > 0) {
+            // 存放到 localStorage 中
+            this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+            Toast({
+              message: `已添加到我喜欢列表`,
+              duration: 1500
+            });
+          }
+        }).catch(e => {})        
       }
     },
     // 获取我喜欢图标
@@ -482,10 +493,27 @@ export default {
     },
     // 获取历史播放记录与我喜欢, 并存储
     getUserPlayList() {
+      const history = this.$storage.getStorageItem("play_history_of_music");
+      const favorite = this.$storage.getStorageItem("my_favorite_of_music");
+      if(history) {
+        this.getUserHistory(history)
+      }
+      if(favorite) {
+        this.getUserFavorite(favorite)
+      }
+    },
+    // 获取本地用户历史播放记录
+    getUserHistory(history = []) {
       // filter 是用来解决BUG localStorage 在没获取到对应数据是返回 false 
-      const history = this.$storage.getStorageItem("play_history_of_music").filter(i => { return i!==false });
-      const favorite = this.$storage.getStorageItem("my_favorite_of_music").filter(i => { return i!==false });
+      // eg: [{...}, {...}, false] => [{...}, {...}]
+      history = history.filter(i => { return i!==false });
       this.$store.dispatch('musicPlayer/setPlayHistory', history)
+    },
+    // 获取用户 "我喜欢" 列表
+    getUserFavorite(favorite = []) {
+      // filter 是用来解决BUG localStorage 在没获取到对应数据是返回 false 
+      // eg: [{...}, {...}, false] => [{...}, {...}]
+      favorite = favorite.filter(i => { return i!==false });
       this.$store.dispatch('musicPlayer/setFavorite', favorite)
     },
     // 保存播放歌曲的历史记录

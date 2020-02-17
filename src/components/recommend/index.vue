@@ -87,7 +87,7 @@ export default {
           this.banners = payload.banners;
         }
       } catch (e) {
-        console.log("首页推荐轮播图加载失败: " + e);
+        console.error("首页推荐轮播图加载失败: " + e);
       }
     },
     // 加载推荐页推荐歌单
@@ -99,7 +99,7 @@ export default {
           this.recommendLists = payload.result;
         }
       } catch (e) {
-        console.log("首页推荐轮播图加载失败: " + e);
+        console.error("首页推荐轮播图加载失败: " + e);
       }
     },
     // 加载推荐页推荐歌曲
@@ -110,7 +110,7 @@ export default {
           this.newSongs = payload.result.slice(0, 6); // 取前六首
         }
       } catch (e) {
-        console.log("首页推荐轮播图加载失败: " + e);
+        console.error("首页推荐轮播图加载失败: " + e);
       }
     },
     // 点击歌单
@@ -130,7 +130,7 @@ export default {
           this.$store.dispatch("musicPlayer/setCurrentIndex", 0)
         }
       } catch (e) {
-        console.log("歌曲获取失败: " + e);
+        console.error("歌曲获取失败: " + e);
       }
       // this.$router.push({ path: `/recommend/${item.id}` });
     }

@@ -39,7 +39,8 @@ export default {
     // 根据列表长度判断是否展示底部提示
     playList: {
       immediate: true,
-      handler(newVal) {
+      async handler(newVal) {
+        await this.$nextTick() // 等待DOM更新完成再执行下面操作
         // list 高度
         let containerHight = $('.songs-list-container').outerHeight()
         // scroll 高度

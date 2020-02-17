@@ -57,7 +57,7 @@ export default {
           this.getTopRankInfo({ idx: 23 });
         }
       } catch (e) {
-        console.log("排行榜获取失败: " + e);
+        console.error("排行榜获取失败: " + e);
       }
     },
     async getTopRankInfo(params) {
@@ -70,7 +70,7 @@ export default {
           this.rankList.push(list);
         }
       } catch (e) {
-        console.log("排行榜获取失败: " + e);
+        console.error("排行榜获取失败: " + e);
       }
     },
     async onClickRankItem(item) {

@@ -45,7 +45,7 @@
               <div
                 class="search-history-item"
                 v-for="(item, index) of searchRecords"
-                :key="index + parseInt(Math.random(0,1)*100000)"
+                :key="index + parseInt(Math.random(0,1) * 1000000)"
                 @click="onClickSearchRerords(item)"
               >
                 <i slot="suffix" class="history-item-icon el-icon-time"></i>
@@ -249,7 +249,7 @@ export default {
       } catch (e) {
         this.isErrResult = true;
         this.loading = false;
-        console.log("相关搜索结果获取失败: " + e);
+        console.error("相关搜索结果获取失败: " + e);
       }
     },
     async refreshScroll() {
@@ -272,7 +272,6 @@ export default {
       this.setHistoryRecord(); // 存储历史记录
       this.musicListLoading = true; // 给歌单添加加载效果
       // 点击的歌单详情
-      // this.musicListInfo = item
       this.loadSingerInfo(item)
       this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
       await this.$store.dispatch("musicLists/loadSingerSongs", { id: item.id }); // await 等待函数执行完成
@@ -303,7 +302,7 @@ export default {
           this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
         }
       } catch (e) {
-        console.log("歌曲获取失败: " + e);
+        console.error("歌曲获取失败: " + e);
       }
     },
     // 加载歌手信息
@@ -321,7 +320,7 @@ export default {
           )
         }
       } catch (e) {
-        console.log('歌手详情获取失败: ' + e)
+        console.error('歌手详情获取失败: ' + e)
       }
     },
     // 删除搜索历史记录

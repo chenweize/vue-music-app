@@ -185,7 +185,7 @@ export default {
           )
         }
       } catch (e) {
-        console.log('歌手详情获取失败: ' + e)
+        console.error('歌手详情获取失败: ' + e)
       }
       // 调用歌曲加载方法
       this.loadSingerSongs(singer.id)
