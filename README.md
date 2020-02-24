@@ -1,6 +1,5 @@
-<p align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank"></a></p>
-<p align="center">QQ音乐app</p>
-<p align="center">> 基于网易云音乐api的音乐app</p>
+<h2 align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank">QQ音乐app</a></h2>
+<p align="center">> 基于vue与网易云音乐api的音乐app</p>
 
 ### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
 
