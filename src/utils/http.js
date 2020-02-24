@@ -1,8 +1,3 @@
-/**
- * 原axios封装(已弃用)
- */
-
-
 import axios from 'axios'
 
 let http = axios.create({

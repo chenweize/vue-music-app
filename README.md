@@ -1,21 +1,25 @@
-# vue-music-app
+<p align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank"></a></p>
+<p align="center">QQ音乐app</p>
+<p align="center">> 基于网易云音乐api的音乐app</p>
 
-> 基于网易云音乐api的音乐app
+### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
+
+### 实现的功能
+1. 音乐播放、暂停、上一曲、下一曲
+2. 播放列表、添加到播放列表、做为下一首播放
+3. 搜索单曲、歌手、专辑
+4. 查看歌手页面、专辑页面
+5. 热门搜索
+6. 搜索历史记录
+7. 排行榜
+8. 切换播放模式
+9. 歌词
+10. 我喜欢
+11. 最近播放
+
+### 未实现的功能
+*   MV播放
+*   下载
 
 ## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 注意: 本DEMO仅用于学习、参考，不可作为商业用途
