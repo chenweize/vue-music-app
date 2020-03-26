@@ -98,7 +98,7 @@
                   class="result-playlist-avatar"
                   shape="square"
                   :size="50"
-                  :src="list.coverImgUrl"
+                  :src="list.artist.picUrl"
                 ></el-avatar>
                 <div class="result-playlist-info">
                   <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
@@ -142,9 +142,7 @@ import { getSongInfo } from "@/api/main-page";
 import { getSingerInfo } from "@/api/singer-page";
 import { isNil, isEmpty } from "ramda";
 import { get } from "vuex-pathify";
-
 let timer = null; // 设置计时器防抖
-
 export default {
   name: "MusicSearchBox",
   props: {},
@@ -234,8 +232,8 @@ export default {
         const { status, payload } = await getSearchByKeyWords(params);
         if (status == 200) {
           this.singers = payload.result.artists ? payload.result.artists : [];
-          this.playlists = payload.result.playlists
-            ? payload.result.playlists
+          this.playlists = payload.result.albums
+            ? payload.result.albums
             : [];
           this.songs = payload.result.songs ? payload.result.songs : [];
           // 搜索结果为空时处理
@@ -284,8 +282,8 @@ export default {
       this.musicListInfo = {
         id: item.id,
         name: item.name,
-        picUrl: item.coverImgUrl,
-        playCount: item.playCount
+        picUrl: item.artist.picUrl
+        // playCount: item.playCount // NeteaseCloudMusicApi 3.25.4 取消了该字段
       };
       this.musicListLoading = true; // 给歌单添加加载效果
       this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
@@ -337,8 +335,7 @@ export default {
         this.$storage.removeStorageItem("search_history_of_music");
       }
     }
-  },
-  destroyed() {}
+  }
 };
 </script>
 
@@ -387,7 +384,6 @@ export default {
       color: #fff;
     }
   }
-
   .music-search-scroll {
     position: relative;
     display: flex;
@@ -420,7 +416,6 @@ export default {
           color: #333;
         }
       }
-
       .search-history {
         .search-history-title {
           margin: 10px;
@@ -447,7 +442,6 @@ export default {
         }
       }
     }
-
     .music-search-result {
       display: flex;
       flex-direction: column;
@@ -467,7 +461,6 @@ export default {
           line-height: 30px;
           background-color: #f1f1f1;
         }
-
         .search-result-item-singer {
           display: flex;
           height: 50px;
@@ -485,7 +478,6 @@ export default {
             }
           }
         }
-
         .search-result-item-playlist {
           display: flex;
           height: 50px;
@@ -503,7 +495,6 @@ export default {
             }
           }
         }
-
         .search-result-item-song {
           display: flex;
           height: 40px;
