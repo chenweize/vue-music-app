@@ -98,7 +98,7 @@
                   class="result-playlist-avatar"
                   shape="square"
                   :size="50"
-                  :src="list.coverImgUrl"
+                  :src="list.artist.picUrl"
                 ></el-avatar>
                 <div class="result-playlist-info">
                   <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
@@ -234,8 +234,8 @@ export default {
         const { status, payload } = await getSearchByKeyWords(params);
         if (status == 200) {
           this.singers = payload.result.artists ? payload.result.artists : [];
-          this.playlists = payload.result.playlists
-            ? payload.result.playlists
+          this.playlists = payload.result.albums
+            ? payload.result.albums
             : [];
           this.songs = payload.result.songs ? payload.result.songs : [];
           // 搜索结果为空时处理
@@ -284,8 +284,8 @@ export default {
       this.musicListInfo = {
         id: item.id,
         name: item.name,
-        picUrl: item.coverImgUrl,
-        playCount: item.playCount
+        picUrl: item.artist.picUrl
+        // playCount: item.playCount // NeteaseCloudMusicApi 3.25.4 取消了该字段
       };
       this.musicListLoading = true; // 给歌单添加加载效果
       this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
