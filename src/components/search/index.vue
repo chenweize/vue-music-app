@@ -337,8 +337,7 @@ export default {
         this.$storage.removeStorageItem("search_history_of_music");
       }
     }
-  },
-  destroyed() {}
+  }
 };
 </script>
 
