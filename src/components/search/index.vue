@@ -142,9 +142,7 @@ import { getSongInfo } from "@/api/main-page";
 import { getSingerInfo } from "@/api/singer-page";
 import { isNil, isEmpty } from "ramda";
 import { get } from "vuex-pathify";
-
 let timer = null; // 设置计时器防抖
-
 export default {
   name: "MusicSearchBox",
   props: {},
@@ -386,7 +384,6 @@ export default {
       color: #fff;
     }
   }
-
   .music-search-scroll {
     position: relative;
     display: flex;
@@ -419,7 +416,6 @@ export default {
           color: #333;
         }
       }
-
       .search-history {
         .search-history-title {
           margin: 10px;
@@ -446,7 +442,6 @@ export default {
         }
       }
     }
-
     .music-search-result {
       display: flex;
       flex-direction: column;
@@ -466,7 +461,6 @@ export default {
           line-height: 30px;
           background-color: #f1f1f1;
         }
-
         .search-result-item-singer {
           display: flex;
           height: 50px;
@@ -484,7 +478,6 @@ export default {
             }
           }
         }
-
         .search-result-item-playlist {
           display: flex;
           height: 50px;
@@ -502,7 +495,6 @@ export default {
             }
           }
         }
-
         .search-result-item-song {
           display: flex;
           height: 40px;
