@@ -7,16 +7,16 @@
 ### 页面预览
 1. 首页推荐页、个人页<br/>
 ![首页推荐页](https://s1.ax1x.com/2020/04/29/J71ZSH.png)
-![个人页](https://github.com/chenweize/vue-music-app/blob/master/static/image/user.png)
+![个人页](https://s1.ax1x.com/2020/04/29/J71eld.png)
 2. 播放器页<br/>
-![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/player.png)
-![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/lyric.png)
+![播放器页](https://s1.ax1x.com/2020/04/29/J71m6A.png)
+![歌词页](https://s1.ax1x.com/2020/04/29/J71iTK.png)
 3. 歌手页、排行榜页<br/>
-![歌手页](https://github.com/chenweize/vue-music-app/blob/master/static/image/singers.png)
-![排行榜页](https://github.com/chenweize/vue-music-app/blob/master/static/image/rank.png)
+![歌手页](https://s1.ax1x.com/2020/04/29/J71AYD.png)
+![排行榜页](https://s1.ax1x.com/2020/04/29/J71Cex.png)
 4. 搜索页、歌曲列表页<br/>
-![搜索页](https://github.com/chenweize/vue-music-app/blob/master/static/image/search.png)
-![歌曲列表页](https://github.com/chenweize/vue-music-app/blob/master/static/image/detail.png)
+![搜索页](https://s1.ax1x.com/2020/04/29/J71Efe.png)
+![歌曲列表页](https://s1.ax1x.com/2020/04/29/J71Pw6.png)
 
 ### 实现的功能
 1. 音乐播放、暂停、上一曲、下一曲
