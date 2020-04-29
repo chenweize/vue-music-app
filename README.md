@@ -5,7 +5,7 @@
 #### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
 
 ### 页面预览
-![首页推荐页](https://github.com/chenweize/vue-music-app/tree/master/static/image)
+![首页推荐页](https://github.com/chenweize/vue-music-app/tree/master/static/image/recommend.png)
 
 ### 实现的功能
 1. 音乐播放、暂停、上一曲、下一曲
