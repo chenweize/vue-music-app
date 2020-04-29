@@ -28,10 +28,8 @@ http.interceptors.request.use(config => {
 // 添加respone拦截器
 http.interceptors.response.use(
     response => {
-        let res = {};
-        res.status = response.status
-        res.payload = response.data;
-        return res;
+        // 设置http返回数据
+        return { status: response.status, payload: response.data };
     },
     error => {
         if (error.response && error.response.status == 404) {
