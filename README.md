@@ -1,10 +1,22 @@
 <h2 align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank">QQ音乐app</a></h2>
-<p align="center"> 基于vue全家桶 + axios + better-scroll等开发一款移动端音乐app, 其中vuex的管理用了一个插件<a href="https://github.com/davestewart/vuex-pathify">vuex-pathify</a>, UI页面参考了安卓版的QQ音乐与网易云音乐的布局。</p>
 
-### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
+<p align="center"> 基于vue全家桶 + axios + better-scroll等开发一款移动端音乐app, 其中vuex的管理用了一个插件<a href="https://github.com/davestewart/vuex-pathify">vuex-pathify</a>, UI页面参考了安卓版的QQ音乐与网易云音乐的页面利用flex布局完成。</p>
+
+#### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
 
 ### 页面预览
-
+1. 首页推荐页、个人页<br/>
+![首页推荐页](https://s1.ax1x.com/2020/04/29/J71ZSH.png)
+![个人页](https://github.com/chenweize/vue-music-app/blob/master/static/image/user.png)
+2. 播放器页<br/>
+![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/player.png)
+![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/lyric.png)
+3. 歌手页、排行榜页<br/>
+![歌手页](https://github.com/chenweize/vue-music-app/blob/master/static/image/singers.png)
+![排行榜页](https://github.com/chenweize/vue-music-app/blob/master/static/image/rank.png)
+4. 搜索页、歌曲列表页<br/>
+![搜索页](https://github.com/chenweize/vue-music-app/blob/master/static/image/search.png)
+![歌曲列表页](https://github.com/chenweize/vue-music-app/blob/master/static/image/detail.png)
 
 ### 实现的功能
 1. 音乐播放、暂停、上一曲、下一曲
