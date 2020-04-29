@@ -6,8 +6,8 @@
 
 ### 页面预览
 1. 首页推荐页、个人页<br/>
-![首页推荐页](https://github.com/chenweize/vue-music-app/blob/master/static/image/recommend.png)
-![个人页](https://github.com/chenweize/vue-music-app/blob/master/static/image/user.png)
+![首页推荐页](https://s1.ax1x.com/2020/04/29/J71ZSH.png)
+![个人页](./static/image/user.png)
 2. 播放器页<br/>
 ![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/player.png)
 ![播放器页](https://github.com/chenweize/vue-music-app/blob/master/static/image/lyric.png)
