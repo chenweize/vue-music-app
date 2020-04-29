@@ -1,6 +1,5 @@
-<p align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank"></a></p>
-<p align="center">QQ音乐app</p>
-<p align="center">> 基于网易云音乐api的音乐app</p>
+<h2 align="center"><a href="https://github.com/chenweize/vue-music-app" target="_blank">QQ音乐app</a></h2>
+<p align="center">> 基于vue全家桶 + axios + better-scroll等开发一款移动端音乐app, 其中vuex的管理用了一个插件[vuex-pathify](https://github.com/davestewart/vuex-pathify)UI页面参考了安卓版的QQ音乐与网易云音乐的布局。</p>
 
 ### <p align="center">首先感谢 Binaryify 大神对[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi/)的不断更新与维护，为本demo提供稳定可靠的后端支持</p>
 
