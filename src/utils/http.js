@@ -28,6 +28,7 @@ http.interceptors.request.use(config => {
 // 添加respone拦截器
 http.interceptors.response.use(
     response => {
+        // 设置http返回数据
         return { status: response.status, payload: response.data };
     },
     error => {
