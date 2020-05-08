@@ -61,5 +61,20 @@
 *   下载
 
 ## Build Setup
+克隆代码到本地之后，需要运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi)，来起一个音乐的 API 接口。
+
+如果需要在服务器上搭建的话就需要将 API 放到自己的服务器上面。
+
+```bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+```
+
 ## 注意: 本项目仅用于学习、参考，不可作为商业用途
 
