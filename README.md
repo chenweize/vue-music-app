@@ -11,7 +11,6 @@
 * `Vue`：用于构建用户界面的 MVVM 框架
 * `vue-router`：为单页面应用提供的路由系统，使用了 `Lazy Loading Routes` 技术来实现异步加载优化性能
 * `vuex`：Vue 集中状态管理，在多个组件共享某些状态时非常便捷
-* `vue-lazyload`：实现图片懒加载，节省用户流量，优化页面加载速度
 * `better-scroll`：解决移动端各种滚动场景需求的插件，使移动端滑动体验更加流畅
 * `vuex-pathify`：一个强大的vuex管理工具
 * `pinyin`：转换中文字符为拼音，用于实现歌手类表的根据歌手名称首字母快速定位功能
@@ -44,21 +43,22 @@
 ![歌曲列表页](https://s1.ax1x.com/2020/04/29/J71Pw6.png)
 
 ### 实现的功能
-1. 音乐播放、暂停、上一曲、下一曲
-2. 播放列表、添加到播放列表、做为下一首播放
-3. 搜索单曲、歌手、专辑
-4. 查看歌手页面、专辑页面
-5. 热门搜索
-6. 搜索历史记录
-7. 排行榜
-8. 切换播放模式
-9. 歌词
-10. 我喜欢
-11. 最近播放
+1. 音乐播放、暂停、上一曲、下一曲（基于H5的<audio>标签实现）
+2. 播放列表、添加到播放列表、做为下一首播放（播放歌曲列表，存于store的播放列表'playList'中，便于管理）
+3. 搜索单曲、歌手、专辑（通过调用NeteaseCloudMusicApi提供的接口获取对应数据实现）
+4. 查看歌手页面、专辑页面（通过调用NeteaseCloudMusicApi提供的接口获取对应数据实现）
+5. 热门搜索（通过调用NeteaseCloudMusicApi提供的接口获取对应数据实现）
+6. 搜索历史记录（基于localStorage实现，有对其进行简单的封装于utils中，已全局注册localStorage）
+7. 排行榜（基于NeteaseCloudMusicApi提供的后台数据实现）
+8. 切换播放模式（将播放模式playMode存于store，单曲循环则是循环播放当前序列号currentIndex的歌曲，随机播放则是打乱播放列表playList的顺序来实现）
+9. 歌词（通过调用NeteaseCloudMusicApi提供的接口获取对应数据实现，利用获取到的歌词'[00:33:21] 我和你心连心同住地球村...'，通过截取成数组，在对应的时间让对应的歌词高亮，实现歌词的实时跟踪）
+10. 歌手列表（通过调用NeteaseCloudMusicApi提供的接口获取对应数据实现，其中右侧悬浮的首字母快速定位框基于 hotoo 提供的 [pinyin](https://github.com/hotoo/pinyin)插件来处理每个歌手对应的首字母，点击字母时利用better-scroll的scrollToElement()方法快速定位到对应位置来实现）
+11. 我喜欢（基于localStorage实现，有对其进行简单的封装于utils中，已全局注册localStorage，通过点击对应歌曲的我喜欢按钮，把我喜欢的歌曲更新到仓库中，并同时存入localStorage）
+12. 最近播放（原理同'我喜欢'功能）
 
 ### 未实现的功能
-*   MV播放
-*   下载
+*   MV播放（已了解过相关技术，可以尝试利用 [video.js](https://github.com/videojs/video.js) 来实现）
+*   下载（已了解过相关技术，可以尝试利用 <a> 标签的 download 功能来实现）
 
 ## Build Setup
 克隆代码到本地之后，需要运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi)，来起一个音乐的 API 接口。
