@@ -379,9 +379,9 @@ export default {
       const audio = this.$refs.musicPlayerAudio;
       this.setPlayingState(!this.playing);
       this.playing ? audio.play() : audio.pause();
-      if (this.currentLyric) {
-        this.currentLyric.togglePlay();
-      }
+      // if (this.currentLyric) {
+      //   this.currentLyric.togglePlay();
+      // }
     },
     // 下一首
     next() {
@@ -567,7 +567,7 @@ export default {
       height: 300%;
       z-index: -1;
       opacity: 0.6;
-      filter: blur(30px);
+      filter: blur(8vw);
       .filter {
         position: absolute;
         width: 100%;
@@ -578,37 +578,37 @@ export default {
     }
     .normal-music-player-top {
       position: relative;
-      margin-bottom: 15px;
+      margin-bottom: 4vw;
       .normal-music-player-back {
         position: absolute;
         top: 0;
-        left: 6px;
+        left: 1.6vw;
         z-index: 50;
         .music-player-arrow-down {
           display: block;
-          padding: 5px 9px;
-          font-size: 30px;
+          padding: 1.3vw 2.4vw;
+          font-size: 8vw;
           color: #fff;
         }
       }
       .normal-music-player-title {
         width: 70%;
         margin: 0 auto;
-        padding-top: 10px;
-        line-height: 20px;
+        padding-top: 2.7vw;
+        line-height: 5.4vw;
         text-align: center;
         // @include no-wrap();
-        font-size: 18px;
+        font-size: 4.8vw;
         font-weight: bold;
         color: rgb(241, 241, 241);
       }
       .normal-music-player-subtitle {
         width: 70%;
         margin: 0 auto;
-        line-height: 20px;
+        line-height: 5.4vw;
         text-align: center;
         // @include no-wrap();
-        font-size: 13px;
+        font-size: 3.5vw;
         color: rgb(241, 241, 241);
       }
     }
@@ -617,8 +617,8 @@ export default {
       align-items: center;
       position: fixed;
       width: 100%;
-      top: 65px;
-      bottom: 170px;
+      top: 17.4vw;
+      bottom: 45.4vw;
       white-space: nowrap;
       font-size: 0;
       .normal-player-middle-l {
@@ -646,7 +646,7 @@ export default {
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            border: 15px solid rgba(255, 255, 255, 0.1);
+            border: 4vw solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             &.play {
               animation: rotate 20s linear infinite;
@@ -688,38 +688,38 @@ export default {
           overflow: hidden;
           text-align: center;
           .text {
-            line-height: 40px;
+            line-height: 10.7vw;
             color: #c7c7c7;
-            font-size: 14px;
+            font-size: 3.8vw;
             &.current {
               color: #fff;
             }
           }
           .no-lyric {
-            line-height: 40px;
+            line-height: 10.4vw;
             margin-top: 60%;
             color: #c7c7c7;
-            font-size: 14px;
+            font-size: 3.8vw;
           }
         }
       }
     }
     .normal-music-player-bottom {
       position: absolute;
-      bottom: 50px;
+      bottom: 13.4vw;
       width: 100%;
       .music-player-progress {
         display: flex;
         align-items: center;
         width: 80%;
         margin: 0px auto;
-        padding: 10px 0;
+        padding: 2.7vw 0;
         .player-progress-time {
           color: rgb(241, 241, 241);
-          font-size: 11px;
-          flex: 0 0 30px;
-          line-height: 30px;
-          width: 30px;
+          font-size: 2.94vw;
+          flex: 0 0 8vw;
+          line-height: 8vw;
+          width: 8vw;
           &.time-l {
             text-align: left;
           }
@@ -742,19 +742,19 @@ export default {
             color: rgb(212, 68, 57);
           }
           i {
-            font-size: 30px;
+            font-size: 8vw;
           }
           .mode {
-            font-size: 25px;
+            font-size: 6.67vw;
           }
           &.i-left {
             text-align: right;
           }
           &.i-center {
-            padding: 0 20px;
+            padding: 0 5.4vw;
             text-align: center;
             i {
-              font-size: 40px;
+              font-size: 10.7vw;
             }
           }
           &.i-right {
@@ -775,12 +775,12 @@ export default {
     bottom: 0;
     z-index: 180;
     width: 100%;
-    height: 60px;
+    height: 16vw;
     background: rgba(255, 255, 255, 0.85);
     .mini-player-icon {
-      flex: 0 0 45px;
-      width: 45px;
-      padding: 0 10px 0 20px;
+      flex: 0 0 12vw;
+      width: 12vw;
+      padding: 0 5.4vw 0 10.7vw;
       img {
         border-radius: 50%;
         &.play {
@@ -800,44 +800,44 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
       .mini-player-name {
-       margin-bottom: 2px;
-       line-height: 16px;
-       font-size: 16px;
+       margin-bottom: 0.5vw;
+       line-height: 4.2vw;
+       font-size: 4.2vw;
        margin: 0;
        color: #2E3030;
       }
       .mini-player-desc {
-        font-size: 13px;
+        font-size: 3.5vw;
         color: #2E3030;
-        margin-top: 3px;
+        margin-top: 0.8vw;
       }
     }
     .mini-player-control {
-      flex: 0 0 30px;
-      width: 30px;
-      padding: 0 10px;
+      flex: 0 0 8vw;
+      width: 8vw;
+      padding: 0 2.7vw;
       .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
-        font-size: 28px;
+        font-size: 7.5vw;
         color: rgba(19, 19, 19, 0.6);
       }
       .iconfont {
         position: relative;
-        left: -5px;
-        top: -3px;
+        left: -0.8vw;
+        top: -0.65vw;
       }
       .icon-iconfront- {
         color: #4c4c4c;
-        font-size: 22px;
+        font-size: 5.9vw;
         position: absolute;
-        left: 5px;
-        top: 3px;
+        left: 0.8vw;
+        top: 0.65vw;
       }
       .icon-icon-- {
         color: #4c4c4c;
-        font-size: 22px;
+        font-size: 5.9vw;
         position: absolute;
-        left: 7px;
-        top: 4px;
+        left: 1.1vw;
+        top: 0.6vw;
       }
     }
     &.mini-enter-active,

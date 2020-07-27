@@ -97,7 +97,7 @@ export default {
   position: fixed;
   width: 100%;
   bottom: 0;
-  top: 82px;
+  top: 18.3vw;
   .music-rank-scroll {
     position: relative;
     width: 100%;
@@ -109,7 +109,7 @@ export default {
       flex-direction: column;
       .music-rank-list-item {
         display: flex;
-        padding: 5px 10px;
+        padding: 0.75vw 1.5vw;
         border-bottom: 1px solid #f6f6f6;
         .music-rank-item-avatar {
         }
@@ -118,13 +118,13 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: space-around;
-          margin-left: 10px;
+          margin-left: 1.5vw;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           .music-rank-item-title {
             margin: 0;
-            font-size: 14px;
+            font-size: 3.8vw;
             font-weight: 400;
             vertical-align: baseline;
           }

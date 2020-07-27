@@ -354,24 +354,24 @@ export default {
     display: flex;
     align-items: center;
     .music-back {
-      font-size: 20px;
+      font-size: 5vw;
       color: #fff;
-      margin: 0 10px;
+      margin: 0 1.5vw;
     }
     .search-input {
       // flex: 1;
-      margin: 10px 10px 10px 0;
+      margin: 1.5vw 1.5vw 1.5vw 0;
       .el-input__inner {
-        height: 30px;
-        line-height: 30px;
-        border-radius: 30px;
-        font-size: 13px;
+        height: 8vw;
+        line-height: 8vw;
+        border-radius: 8vw;
+        font-size: 3.5vw;
         color: #fff;
         border: 1px solid #fff;
         background-color: #22d59c;
       }
       .el-input__icon {
-        line-height: 30px;
+        line-height: 8vw;
       }
     }
     input::-webkit-input-placeholder {
@@ -398,29 +398,29 @@ export default {
       width: 100%;
       .search-hots {
         .search-hots-title {
-          margin: 10px;
-          font-size: 16px;
-          line-height: 16px;
+          margin: 2.5vw;
+          font-size: 4.2vw;
+          line-height: 4.2vw;
           color: #666;
         }
         .search-hots-item {
           display: inline-block;
           border: 1px solid #e3e3e3;
-          border-radius: 26px;
-          height: 26px;
-          margin-left: 6px;
-          margin-bottom: 6px;
-          padding: 0 14px;
-          font-size: 13px;
-          line-height: 26px;
+          border-radius: 7vw;
+          height: 7vw;
+          margin-left: 1.6vw;
+          margin-bottom: 1.6vw;
+          padding: 0 3.8vw;
+          font-size: 3.5vw;
+          line-height: 7vw;
           color: #333;
         }
       }
       .search-history {
         .search-history-title {
-          margin: 10px;
-          font-size: 16px;
-          line-height: 16px;
+          margin: 2.7vw;
+          font-size: 4.2vw;
+          line-height: 4.2vw;
           color: #666;
         }
         .search-history-item {
@@ -428,15 +428,15 @@ export default {
           flex-direction: row;
           justify-content: space-between;
           width: 100%;
-          height: 40px;
-          line-height: 40px;
+          height: 10.7vw;
+          line-height: 10.7vw;
           border-bottom: 1px solid #e3e3e3;
           .history-item-icon {
-            margin: auto 10px;
+            margin: auto 2.7vw;
             color: #d1d2d3;
           }
           .history-item-title {
-            font-size: 15px;
+            font-size: 4vw;
             flex: 1;
           }
         }
@@ -455,63 +455,63 @@ export default {
       }
       .search-result-item {
         .search-result-item-title {
-          padding-left: 20px;
+          padding-left: 5.3vw;
           color: #22d59c;
-          font-size: 14px;
-          line-height: 30px;
+          font-size: 3.8vw;
+          line-height: 8vw;
           background-color: #f1f1f1;
         }
         .search-result-item-singer {
           display: flex;
-          height: 50px;
-          padding: 5px 20px;
+          height: 13.4vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-singer-info {
-            margin-left: 15px;
+            margin-left: 4vw;
             flex: 1;
             display: flex;
-            height: 50px;
+            height: 13.4vw;
             overflow: hidden;
             .result-singer-name {
               margin: auto 0;
-              font-size: 15px;
+              font-size: 4vw;
             }
           }
         }
         .search-result-item-playlist {
           display: flex;
-          height: 50px;
-          padding: 5px 20px;
+          height: 13.4vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-playlist-info {
-            margin-left: 15px;
+            margin-left: 4vw;
             flex: 1;
             display: flex;
-            height: 50px;
+            height: 13.4vw;
             overflow: hidden;
             .result-playlist-name {
               margin: auto 0;
-              font-size: 15px;
+              font-size: 4vw;
             }
           }
         }
         .search-result-item-song {
           display: flex;
-          height: 40px;
-          padding: 5px 20px;
+          height: 10.7vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-song-info {
             display: flex;
             flex-direction: column;
             .result-song-name {
-              font-size: 16px;
+              font-size: 4.2vw;
               color: #2e3030;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
             }
             .result-song-atrister {
-              font-size: 12px;
+              font-size: 3.2vw;
               color: #757575;
               white-space: nowrap;
               overflow: hidden;
@@ -523,9 +523,9 @@ export default {
       .search-result-item-bottom {
         position: relative;
         width: 100%;
-        height: 60px;
+        height: 16vw;
         text-align: center;
-        line-height: 60px;
+        line-height: 16vw;
         color: #969696;
       }
     }

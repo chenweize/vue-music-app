@@ -142,7 +142,7 @@ export default {
 .music-app-recmmend-container {
   position: fixed;
   width: 100%;
-  top: 82px;
+  top: 18.2vw;
   bottom: 0;
   z-index: 100;
   .music-recommend-scroll {
@@ -155,7 +155,7 @@ export default {
       z-index: -10;
       background-color: #22d59c; // $color-theme
       width: 100%;
-      height: 20vh;
+      height: 34.5vw;
       vertical-align: inherit;
     }
     .recommend-banner-slider {
@@ -171,7 +171,7 @@ export default {
       // text-align: center;
       // flex-wrap: wrap;
       .music-lists-title {
-        margin: 10px;
+        margin: 1.4vw;
       }
       .music-lists-container {
         position: relative;
@@ -187,11 +187,11 @@ export default {
           flex-direction: column;
           // width: 7rem;
           // height: 9rem;
-          width: 30%;
+          width: 30vw;
           overflow: hidden;
-          margin-bottom: 5px;
+          margin-bottom: 0.7vw;
           .lists-item-hot {
-            font-size: 12px;
+            font-size: 1.7vw;
             right: 0.1rem;
             color: #ffffff;
             z-index: 3;
@@ -210,7 +210,8 @@ export default {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            font-size: 12px;
+            font-size: 3.2vw;
+            font-weight: 400 !important;
           }
         }
       }

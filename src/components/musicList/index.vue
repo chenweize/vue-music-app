@@ -153,7 +153,7 @@ export default {
       left: 0;
       top: 0;
       right: 0;
-      bottom: -20px;
+      bottom: -5.4vw;
       z-index: -1;
       background-repeat: no-repeat;
       background-size: cover;
@@ -173,28 +173,28 @@ export default {
       display: flex;
       z-index: 10;
       .music-back {
-        font-size: 22px;
+        font-size: 5.9vw;
         color: #fff;
-        margin: 10px;
+        margin: 2.7vw;
       }
       .music-list-header-text {
-        margin: 10px 0;
+        margin: 2.7vw 0;
         color: #fff;
       }
     }
     .music-list-info-footer {
       color: #fff;
       z-index: 10;
-      margin-bottom: 10px;
+      margin-bottom: 2.7vw;
       .music-list-footer-text {
-        margin: 10px 20px;
+        margin: 2.7vw 5.3vw;
       }
       .music-list-footer-hot {
-        margin: 10px 20px;
+        margin: 2.7vw 5.3vw;
       }
       .music-list-footer-desc {
-        margin: 10px 20px 0 20px;
-        font-size: 13px;
+        margin: 2.7vw 5.3vw 0 5.3vw;
+        font-size: 3.4vw;
       }
     }
   }
@@ -203,25 +203,25 @@ export default {
     height: 100%;
     overflow: hidden;
     background-color: #fff; // #f2f3f4
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-top-left-radius: 4vw;
+    border-top-right-radius: 4vw;
     flex: 1;
     .play-list-header {
       display: flex;
-      height: 40px;
-      line-height: 40px;
-      padding: 0 10px;
+      height: 10.7vw;
+      line-height: 10.7vw;
+      padding: 0 2.7vw;
       border-bottom: 1px solid #dedede;
       .play-list-icon {
-        font-size: 22px;
+        font-size: 5.9vw;
         margin: auto 0;
       }
       .play-list-header-title {
-        font-size: 16px;
+        font-size: 4.2vw;
         flex: 1;
-        margin-left: 8px;
+        margin-left: 2.2vw;
         span {
-          font-size: 15px;
+          font-size: 4vw;
           color: #888;
         }
       }

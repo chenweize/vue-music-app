@@ -205,7 +205,7 @@ export default {
   position: fixed;
   width: 100%;
   bottom: 0;
-  top: 82px;
+  top: 18.2vw;
   .music-singer-scroll {
     position: relative;
     width: 100%;
@@ -219,31 +219,31 @@ export default {
         flex-direction: column;
         width: 100%;
         .music-singer-list-title {
-          padding-left: 15px;
+          padding-left: 2.25vw;
           color: #22d59c;
-          font-size: 14px;
-          height: 30px;
-          line-height: 30px;
+          font-size: 3.8vw;
+          height: 8vw;
+          line-height: 8vw;
           background-color: #f1f1f1;
         }
         .music-singer-item {
           display: flex;
           flex-direction: row;
-          padding: 5px 15px;
+          padding: 0.75vw 2.25vw;
           border-bottom: 1px solid #e3e3e3;
           .music-singer-item-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
+            width: 20vw;
+            height: 20vw;
+            border-radius: 1.4vw;
           }
           .music-singer-item-info {
-            margin-left: 15px;
+            margin-left: 4vw;
             flex: 1;
             display: flex;
             overflow: hidden;
             .music-singer-item-name {
               margin: auto 0;
-              font-size: 15px;
+              font-size: 4vw;
             }
           }
         }
@@ -256,17 +256,17 @@ export default {
       right: 0;
       top: 50%;
       transform: translateY(-50%);
-      width: 20px;
-      padding: 20px 0;
-      border-radius: 10px;
+      width: 7vw;
+      padding: 3.5vw 0;
+      border-radius: 2.8vw;
       text-align: center;
       background: rgba(241, 241, 241, 0.5);
       font-family: Helvetica;
       .music-singer-shortcut-item {
-        padding: 3px;
+        padding: 0.8vw;
         line-height: 1;
         color: black;
-        font-size: 11px;
+        font-size: 4.2vw;
         &.current {
           color: #22d59c;
           // font-weight: bold;

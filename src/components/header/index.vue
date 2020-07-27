@@ -51,7 +51,7 @@ export default {
 .music-app-header-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 18.3vw;
   display: flex;
   flex-direction: column;
   background-color: #22d59c; // #31c27c
@@ -60,33 +60,32 @@ export default {
     flex: 1;
     align-items: center;
     flex-direction: row;
-    margin: 10px;
+    margin: 1.5vw;
     .music-header-user {
-      margin-right: 10px;
-      font-size: 20px;
+      margin-right: 1.5vw;
+      font-size: 5.3vw;
       color: #ffffff;
     }
     .music-header-title {
       flex: 1;
       text-align: center;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 5.3vw;
       color: #ffffff;
     }
     .music-header-search {
-      font-size: 20px;
+      font-size: 5.3vw;
       color: #ffffff;
       //   flex: 1;
     }
   }
   .music-tabs {
     flex: 1;
-    padding: 5px 10px 10px 10px;
+    padding: 0.8vw 1.5vw 1.5vw 1.5vw;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    // background-color: #ffffff;
     .music-tab-item {
       flex: 1;
       text-align: center;
@@ -95,7 +94,7 @@ export default {
     .router-link-active {
       .tab-item-title {
         color: #fff; // #31c27c
-        padding-bottom: 3px;
+        padding-bottom: 0.5vw;
         border-bottom: 2px solid #fff;
       }
     }
