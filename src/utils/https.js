@@ -1,3 +1,4 @@
+// 该 axios 封装已弃用
 import axios from 'axios'
 import qs from 'querystring'
 

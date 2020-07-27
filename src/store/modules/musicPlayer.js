@@ -136,23 +136,30 @@ const actions = {
   },
   // 存储我喜欢歌曲
   setFavorite({ state, commit }, data) {
+    // 复制 store 的我喜欢列表
     let favorite = Object.assign([], state.favoriteList)
+    // 判断这首歌曲是否是一个数组
+    // 该判断是为了解决一个我已经忘了的BUG
     if (!Array.isArray(data)) {
       favorite.unshift(data)
     } else {
       favorite = data
     }
     commit('SET_MY_FAVORITE', favorite)
-    return favorite ? favorite : []
+    return favorite ? favorite.length : 0
   },
   // 删除我喜欢的歌曲
   deleteFavorite({ state, commit }, data) {
+    // 复制 store 的我喜欢列表
     let favorite = Object.assign([], state.favoriteList)
+    // 寻找删除歌曲的序列号
     let index = favorite.findIndex(item => {
       return item.id === data.id;
     });
+    // 移除该歌曲的序列号
     favorite.splice(index, 1)
     commit('SET_MY_FAVORITE', favorite)
+    return index
   }
 }
 const getters = make.getters(state)

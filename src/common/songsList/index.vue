@@ -11,7 +11,7 @@
       <div class="songs-list-item-icon el-icon-video-play"></div>
     </div>
     <!-- 解决当迷你播放器出现时, 最底下的歌曲被遮挡BUG -->
-    <div class="songs-list-bottom" >
+    <div class="songs-list-bottom" v-if="showBottom">
       ~~ 我是有底线的 ~~
     </div>
   </div>
@@ -30,9 +30,26 @@ export default {
     }
   },
   data() {
-      return {}
+      return {
+        showBottom: false
+      }
   },
   computed: {},
+  watch: {
+    // 根据列表长度判断是否展示底部提示
+    playList: {
+      immediate: true,
+      async handler(newVal) {
+        await this.$nextTick() // 等待DOM更新完成再执行下面操作
+        // list 高度
+        let containerHight = $('.songs-list-container').outerHeight()
+        // scroll 高度
+        let scrollHight = $($($('.songs-list-container').parent()[0]).parent()[0]).outerHeight()
+        scrollHight > containerHight ? this.showBottom = false : this.showBottom = true
+      },
+      deep: true
+    }
+  },
   methods: {
     onClickListItem(index, item) {
       this.$emit("clickItem", index, item)

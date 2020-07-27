@@ -56,7 +56,6 @@ export default {
       noResult: false,
     };
   },
-  created() {},
   computed: {
     playList: get("musicLists/musicLists"),
     playHistory: get("musicPlayer/playHistory"),

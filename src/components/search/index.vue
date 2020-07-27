@@ -45,7 +45,7 @@
               <div
                 class="search-history-item"
                 v-for="(item, index) of searchRecords"
-                :key="index + parseInt(Math.random(0,1)*100000)"
+                :key="index + parseInt(Math.random(0,1) * 1000000)"
                 @click="onClickSearchRerords(item)"
               >
                 <i slot="suffix" class="history-item-icon el-icon-time"></i>
@@ -98,7 +98,7 @@
                   class="result-playlist-avatar"
                   shape="square"
                   :size="50"
-                  :src="list.coverImgUrl"
+                  :src="list.artist.picUrl"
                 ></el-avatar>
                 <div class="result-playlist-info">
                   <p class="result-playlist-name">{{ '歌单: ' + list.name }}</p>
@@ -142,9 +142,7 @@ import { getSongInfo } from "@/api/main-page";
 import { getSingerInfo } from "@/api/singer-page";
 import { isNil, isEmpty } from "ramda";
 import { get } from "vuex-pathify";
-
 let timer = null; // 设置计时器防抖
-
 export default {
   name: "MusicSearchBox",
   props: {},
@@ -234,8 +232,8 @@ export default {
         const { status, payload } = await getSearchByKeyWords(params);
         if (status == 200) {
           this.singers = payload.result.artists ? payload.result.artists : [];
-          this.playlists = payload.result.playlists
-            ? payload.result.playlists
+          this.playlists = payload.result.albums
+            ? payload.result.albums
             : [];
           this.songs = payload.result.songs ? payload.result.songs : [];
           // 搜索结果为空时处理
@@ -249,7 +247,7 @@ export default {
       } catch (e) {
         this.isErrResult = true;
         this.loading = false;
-        console.log("相关搜索结果获取失败: " + e);
+        console.error("相关搜索结果获取失败: " + e);
       }
     },
     async refreshScroll() {
@@ -272,7 +270,6 @@ export default {
       this.setHistoryRecord(); // 存储历史记录
       this.musicListLoading = true; // 给歌单添加加载效果
       // 点击的歌单详情
-      // this.musicListInfo = item
       this.loadSingerInfo(item)
       this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
       await this.$store.dispatch("musicLists/loadSingerSongs", { id: item.id }); // await 等待函数执行完成
@@ -285,8 +282,8 @@ export default {
       this.musicListInfo = {
         id: item.id,
         name: item.name,
-        picUrl: item.coverImgUrl,
-        playCount: item.playCount
+        picUrl: item.artist.picUrl
+        // playCount: item.playCount // NeteaseCloudMusicApi 3.25.4 取消了该字段
       };
       this.musicListLoading = true; // 给歌单添加加载效果
       this.$router.push({ path: `/search/${item.id}` }); // 跳转至歌单详情界面
@@ -303,7 +300,7 @@ export default {
           this.$store.dispatch("musicPlayer/setCurrentIndex", 0);
         }
       } catch (e) {
-        console.log("歌曲获取失败: " + e);
+        console.error("歌曲获取失败: " + e);
       }
     },
     // 加载歌手信息
@@ -321,7 +318,7 @@ export default {
           )
         }
       } catch (e) {
-        console.log('歌手详情获取失败: ' + e)
+        console.error('歌手详情获取失败: ' + e)
       }
     },
     // 删除搜索历史记录
@@ -338,8 +335,7 @@ export default {
         this.$storage.removeStorageItem("search_history_of_music");
       }
     }
-  },
-  destroyed() {}
+  }
 };
 </script>
 
@@ -358,24 +354,24 @@ export default {
     display: flex;
     align-items: center;
     .music-back {
-      font-size: 20px;
+      font-size: 5vw;
       color: #fff;
-      margin: 0 10px;
+      margin: 0 1.5vw;
     }
     .search-input {
       // flex: 1;
-      margin: 10px 10px 10px 0;
+      margin: 1.5vw 1.5vw 1.5vw 0;
       .el-input__inner {
-        height: 30px;
-        line-height: 30px;
-        border-radius: 30px;
-        font-size: 13px;
+        height: 8vw;
+        line-height: 8vw;
+        border-radius: 8vw;
+        font-size: 3.5vw;
         color: #fff;
         border: 1px solid #fff;
         background-color: #22d59c;
       }
       .el-input__icon {
-        line-height: 30px;
+        line-height: 8vw;
       }
     }
     input::-webkit-input-placeholder {
@@ -388,7 +384,6 @@ export default {
       color: #fff;
     }
   }
-
   .music-search-scroll {
     position: relative;
     display: flex;
@@ -403,30 +398,29 @@ export default {
       width: 100%;
       .search-hots {
         .search-hots-title {
-          margin: 10px;
-          font-size: 16px;
-          line-height: 16px;
+          margin: 2.5vw;
+          font-size: 4.2vw;
+          line-height: 4.2vw;
           color: #666;
         }
         .search-hots-item {
           display: inline-block;
           border: 1px solid #e3e3e3;
-          border-radius: 26px;
-          height: 26px;
-          margin-left: 6px;
-          margin-bottom: 6px;
-          padding: 0 14px;
-          font-size: 13px;
-          line-height: 26px;
+          border-radius: 7vw;
+          height: 7vw;
+          margin-left: 1.6vw;
+          margin-bottom: 1.6vw;
+          padding: 0 3.8vw;
+          font-size: 3.5vw;
+          line-height: 7vw;
           color: #333;
         }
       }
-
       .search-history {
         .search-history-title {
-          margin: 10px;
-          font-size: 16px;
-          line-height: 16px;
+          margin: 2.7vw;
+          font-size: 4.2vw;
+          line-height: 4.2vw;
           color: #666;
         }
         .search-history-item {
@@ -434,21 +428,20 @@ export default {
           flex-direction: row;
           justify-content: space-between;
           width: 100%;
-          height: 40px;
-          line-height: 40px;
+          height: 10.7vw;
+          line-height: 10.7vw;
           border-bottom: 1px solid #e3e3e3;
           .history-item-icon {
-            margin: auto 10px;
+            margin: auto 2.7vw;
             color: #d1d2d3;
           }
           .history-item-title {
-            font-size: 15px;
+            font-size: 4vw;
             flex: 1;
           }
         }
       }
     }
-
     .music-search-result {
       display: flex;
       flex-direction: column;
@@ -462,66 +455,63 @@ export default {
       }
       .search-result-item {
         .search-result-item-title {
-          padding-left: 20px;
+          padding-left: 5.3vw;
           color: #22d59c;
-          font-size: 14px;
-          line-height: 30px;
+          font-size: 3.8vw;
+          line-height: 8vw;
           background-color: #f1f1f1;
         }
-
         .search-result-item-singer {
           display: flex;
-          height: 50px;
-          padding: 5px 20px;
+          height: 13.4vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-singer-info {
-            margin-left: 15px;
+            margin-left: 4vw;
             flex: 1;
             display: flex;
-            height: 50px;
+            height: 13.4vw;
             overflow: hidden;
             .result-singer-name {
               margin: auto 0;
-              font-size: 15px;
+              font-size: 4vw;
             }
           }
         }
-
         .search-result-item-playlist {
           display: flex;
-          height: 50px;
-          padding: 5px 20px;
+          height: 13.4vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-playlist-info {
-            margin-left: 15px;
+            margin-left: 4vw;
             flex: 1;
             display: flex;
-            height: 50px;
+            height: 13.4vw;
             overflow: hidden;
             .result-playlist-name {
               margin: auto 0;
-              font-size: 15px;
+              font-size: 4vw;
             }
           }
         }
-
         .search-result-item-song {
           display: flex;
-          height: 40px;
-          padding: 5px 20px;
+          height: 10.7vw;
+          padding: 1.4vw 5.4vw;
           border-bottom: 1px solid #e3e3e3;
           .result-song-info {
             display: flex;
             flex-direction: column;
             .result-song-name {
-              font-size: 16px;
+              font-size: 4.2vw;
               color: #2e3030;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
             }
             .result-song-atrister {
-              font-size: 12px;
+              font-size: 3.2vw;
               color: #757575;
               white-space: nowrap;
               overflow: hidden;
@@ -533,9 +523,9 @@ export default {
       .search-result-item-bottom {
         position: relative;
         width: 100%;
-        height: 60px;
+        height: 16vw;
         text-align: center;
-        line-height: 60px;
+        line-height: 16vw;
         color: #969696;
       }
     }

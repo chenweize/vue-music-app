@@ -200,22 +200,22 @@ export default {
     left: 0;
     bottom: 0;
     width: 100%;
-    border-radius: 8px;
+    border-radius: 2.1vw;
     background-color: #f2f3f4; // background
     .list-header {
       position: relative;
-      padding: 0 30px 0 20px;
+      padding: 0 8vw 0 5.4vw;
       .title {
         display: flex;
         align-items: center;
         .iconfont {
-          margin-right: 10px;
-          font-size: 20px;
-          color: #757575;
+          margin-right: 2.7vw;
+          font-size: 5.4vw;
+          color: #fde7e7;
         }
         .text {
           flex: 1;
-          font-size: 14px;
+          font-size: 3.8vw;
           color: #2e3030;
           .count {
             position: relative;
@@ -223,19 +223,19 @@ export default {
           }
         }
         .clear-icon {
-          font-size: 14px;
+          font-size: 3.8vw;
           color: #757575;
         }
       }
     }
     .list-content {
-      max-height: 240px;
+      max-height: 64vw;
       overflow: hidden;
       .item {
         display: flex;
         align-items: center;
-        height: 40px;
-        padding: 0 30px 0 20px;
+        height: 10.7vw;
+        padding: 0 8vw 0 5.4vw;
         overflow: hidden;
         &.list-enter-active,
         &.list-leave-active {
@@ -247,27 +247,27 @@ export default {
         }
         .current {
           color: #22d59c;
-          margin-right: 5px;
+          margin-right: 1.3vw;
         }
         .text {
           flex: 1;
           // @include no-wrap();
-          line-height: 20px;
-          font-size: 14px;
+          line-height: 5.4vw;
+          font-size: 3.8vw;
           color: #2e3030;
         }
         .delete {
           // @include extend-click();
-          font-size: 11px;
+          font-size: 2.9vw;
           color: rgb(212, 68, 57);
         }
       }
     }
     .list-close {
       text-align: center;
-      line-height: 50px;
+      line-height: 13.3vw;
       background: #f2f3f4; // background
-      font-size: 14px-x;
+      font-size: 3.8vw;
       color: #2e3030;
     }
   }

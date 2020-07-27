@@ -1,19 +1,18 @@
 <template>
   <div class="music-app-player-container" v-if="playList.length > 0">
     <transition name="normal">
+      <!-- HTML5 中, PC 端基于鼠标的界面互动主要是单击(click), 移动端界面交互方式主要是触摸(touch) -->
+      <!-- touchstart: 触摸开始时触发 -->
       <div class="normal-music-player" v-show="fullScreen" @touchstart.once="firstPlay">
         <div class="normal-music-player-bg">
           <div class="filter"></div>
           <img :src="currentSong.al.picUrl" width="100%" height="100%" />
-          <!-- <img :src="playList[0].al.picUrl" width="100%" height="100%" /> -->
         </div>
 
         <div class="normal-music-player-top">
           <div class="normal-music-player-back" @click="onClickDown">
             <i class="music-player-arrow-down el-icon-arrow-down"></i>
           </div>
-          <!-- <h1 class="normal-music-player-title" v-html="currentSong.name"></h1>
-          <h2 class="normal-music-player-subtitle" v-html="currentSong.singer"></h2>-->
           <h1 class="normal-music-player-title" v-html="currentSong.name"></h1>
           <h2
             class="normal-music-player-subtitle"
@@ -27,14 +26,12 @@
               <div class="normal-player-cd">
                 <div class="cd" :class="cdTransition">
                   <img :src="currentSong.al.picUrl" class="image" />
-                  <!-- <img :src="playList[0].al.picUrl" class="image" /> -->
                 </div>
               </div>
             </div>
           </transition>
 
           <transition name="middleR">
-            <!-- <scroll class="middle-r" ref="lyricList" v-show="currentShow === 'lyric'" :data="currentLyric"> -->
             <scroll
               class="normal-player-middle-r"
               ref="lyricList"
@@ -42,7 +39,6 @@
             >
               <div class="player-middle-lyric">
                 <div class="currentLyric" v-if="currentLyric">
-                  <!-- :class="{'current': currentLineNum === index}" -->
                   <p
                     ref="lyricLine"
                     class="text"
@@ -52,7 +48,6 @@
                   >{{line}}</p>
                 </div>
                 <p class="no-lyric" v-if="currentLyric === null">暂无歌词</p>
-                <!-- <p class="no-lyric" v-if="currentLyric === null">{{upDatecurrentLyric}}</p> -->
               </div>
             </scroll>
           </transition>
@@ -86,8 +81,8 @@
             <div class="player-operators-icon i-right">
               <i
                 class="iconfont"
-                @click="toggleFavorite(currentSong)"
                 :class="getFavoriteIcon(currentSong)"
+                @click="toggleFavorite(currentSong)"
               ></i>
             </div>
           </div>
@@ -105,7 +100,6 @@
         </div>
         <div class="mini-player-control" @click.stop="togglePlaying">
           <progress-circle :radius="32" :percent="percent">
-            <!-- <i class="icon-mini" :class="miniIcon" ></i> -->
             <i class="iconfont mini-player-play" :class="miniIcon"></i>
           </progress-circle>
         </div>
@@ -221,9 +215,10 @@ export default {
         }, 50);
         this.setPlayingState(true);
       } else {
+        // 提示
         Toast({
-          message: `这首歌为付费歌曲, 自动为您播放下一首`,
-          duration: 3000
+          message: `这首歌为付费歌曲, 自动为您播放下一首`, // 提示信息
+          duration: 3000 // 持续时间
         });
         setTimeout(()=>{this.next()}, 3000)
       }
@@ -297,7 +292,7 @@ export default {
         this.currentLyricTime = []
         this.currentLyric = null;
         this.currentLineNum = 0;
-        console.log("歌词获取失败: " + e);
+        console.error("歌词获取失败: " + e);
       }
     },
     // 处理歌词
@@ -384,9 +379,9 @@ export default {
       const audio = this.$refs.musicPlayerAudio;
       this.setPlayingState(!this.playing);
       this.playing ? audio.play() : audio.pause();
-      if (this.currentLyric) {
-        this.currentLyric.togglePlay();
-      }
+      // if (this.currentLyric) {
+      //   this.currentLyric.togglePlay();
+      // }
     },
     // 下一首
     next() {
@@ -427,13 +422,29 @@ export default {
     // 点击我喜欢图标
     toggleFavorite(song) {
       if (this.isFavorite(song)) {
-        this.$store.dispatch('musicPlayer/deleteFavorite', song)
-        // 存放到 localStorage 中
-        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+        this.$store.dispatch('musicPlayer/deleteFavorite', song).then((index) => {
+          // index > -1 表示这首歌属于 我喜欢
+          if (index > -1) {
+            // 存放到 localStorage 中
+            this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList)
+            Toast({
+              message: `已从我喜欢列表移除`,
+              duration: 1500
+            });
+          }
+        }).catch(e => {})
       } else {
-        this.$store.dispatch('musicPlayer/setFavorite', song)
-        // 存放到 localStorage 中
-        this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+        this.$store.dispatch('musicPlayer/setFavorite', song).then((favorite) => {
+          // favorite >0 表示我喜欢存储成功
+          if (favorite > 0) {
+            // 存放到 localStorage 中
+            this.$storage.setStorageItem("my_favorite_of_music", this.favoriteList);
+            Toast({
+              message: `已添加到我喜欢列表`,
+              duration: 1500
+            });
+          }
+        }).catch(e => {})        
       }
     },
     // 获取我喜欢图标
@@ -482,10 +493,27 @@ export default {
     },
     // 获取历史播放记录与我喜欢, 并存储
     getUserPlayList() {
+      const history = this.$storage.getStorageItem("play_history_of_music");
+      const favorite = this.$storage.getStorageItem("my_favorite_of_music");
+      if(history) {
+        this.getUserHistory(history)
+      }
+      if(favorite) {
+        this.getUserFavorite(favorite)
+      }
+    },
+    // 获取本地用户历史播放记录
+    getUserHistory(history = []) {
       // filter 是用来解决BUG localStorage 在没获取到对应数据是返回 false 
-      const history = this.$storage.getStorageItem("play_history_of_music").filter(i => { return i!==false });
-      const favorite = this.$storage.getStorageItem("my_favorite_of_music").filter(i => { return i!==false });
+      // eg: [{...}, {...}, false] => [{...}, {...}]
+      history = history.filter(i => { return i!==false });
       this.$store.dispatch('musicPlayer/setPlayHistory', history)
+    },
+    // 获取用户 "我喜欢" 列表
+    getUserFavorite(favorite = []) {
+      // filter 是用来解决BUG localStorage 在没获取到对应数据是返回 false 
+      // eg: [{...}, {...}, false] => [{...}, {...}]
+      favorite = favorite.filter(i => { return i!==false });
       this.$store.dispatch('musicPlayer/setFavorite', favorite)
     },
     // 保存播放歌曲的历史记录
@@ -539,7 +567,7 @@ export default {
       height: 300%;
       z-index: -1;
       opacity: 0.6;
-      filter: blur(30px);
+      filter: blur(8vw);
       .filter {
         position: absolute;
         width: 100%;
@@ -550,37 +578,37 @@ export default {
     }
     .normal-music-player-top {
       position: relative;
-      margin-bottom: 15px;
+      margin-bottom: 4vw;
       .normal-music-player-back {
         position: absolute;
         top: 0;
-        left: 6px;
+        left: 1.6vw;
         z-index: 50;
         .music-player-arrow-down {
           display: block;
-          padding: 5px 9px;
-          font-size: 30px;
+          padding: 1.3vw 2.4vw;
+          font-size: 8vw;
           color: #fff;
         }
       }
       .normal-music-player-title {
         width: 70%;
         margin: 0 auto;
-        padding-top: 10px;
-        line-height: 20px;
+        padding-top: 2.7vw;
+        line-height: 5.4vw;
         text-align: center;
         // @include no-wrap();
-        font-size: 18px;
+        font-size: 4.8vw;
         font-weight: bold;
         color: rgb(241, 241, 241);
       }
       .normal-music-player-subtitle {
         width: 70%;
         margin: 0 auto;
-        line-height: 20px;
+        line-height: 5.4vw;
         text-align: center;
         // @include no-wrap();
-        font-size: 13px;
+        font-size: 3.5vw;
         color: rgb(241, 241, 241);
       }
     }
@@ -589,8 +617,8 @@ export default {
       align-items: center;
       position: fixed;
       width: 100%;
-      top: 65px;
-      bottom: 170px;
+      top: 17.4vw;
+      bottom: 45.4vw;
       white-space: nowrap;
       font-size: 0;
       .normal-player-middle-l {
@@ -618,7 +646,7 @@ export default {
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            border: 15px solid rgba(255, 255, 255, 0.1);
+            border: 4vw solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             &.play {
               animation: rotate 20s linear infinite;
@@ -660,38 +688,38 @@ export default {
           overflow: hidden;
           text-align: center;
           .text {
-            line-height: 40px;
+            line-height: 10.7vw;
             color: #c7c7c7;
-            font-size: 14px;
+            font-size: 3.8vw;
             &.current {
               color: #fff;
             }
           }
           .no-lyric {
-            line-height: 40px;
+            line-height: 10.4vw;
             margin-top: 60%;
             color: #c7c7c7;
-            font-size: 14px;
+            font-size: 3.8vw;
           }
         }
       }
     }
     .normal-music-player-bottom {
       position: absolute;
-      bottom: 50px;
+      bottom: 13.4vw;
       width: 100%;
       .music-player-progress {
         display: flex;
         align-items: center;
         width: 80%;
         margin: 0px auto;
-        padding: 10px 0;
+        padding: 2.7vw 0;
         .player-progress-time {
           color: rgb(241, 241, 241);
-          font-size: 11px;
-          flex: 0 0 30px;
-          line-height: 30px;
-          width: 30px;
+          font-size: 2.94vw;
+          flex: 0 0 8vw;
+          line-height: 8vw;
+          width: 8vw;
           &.time-l {
             text-align: left;
           }
@@ -714,19 +742,19 @@ export default {
             color: rgb(212, 68, 57);
           }
           i {
-            font-size: 30px;
+            font-size: 8vw;
           }
           .mode {
-            font-size: 25px;
+            font-size: 6.67vw;
           }
           &.i-left {
             text-align: right;
           }
           &.i-center {
-            padding: 0 20px;
+            padding: 0 5.4vw;
             text-align: center;
             i {
-              font-size: 40px;
+              font-size: 10.7vw;
             }
           }
           &.i-right {
@@ -747,12 +775,12 @@ export default {
     bottom: 0;
     z-index: 180;
     width: 100%;
-    height: 60px;
+    height: 16vw;
     background: rgba(255, 255, 255, 0.85);
     .mini-player-icon {
-      flex: 0 0 45px;
-      width: 45px;
-      padding: 0 10px 0 20px;
+      flex: 0 0 12vw;
+      width: 12vw;
+      padding: 0 5.4vw 0 10.7vw;
       img {
         border-radius: 50%;
         &.play {
@@ -772,44 +800,44 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
       .mini-player-name {
-       margin-bottom: 2px;
-       line-height: 16px;
-       font-size: 16px;
+       margin-bottom: 0.5vw;
+       line-height: 4.2vw;
+       font-size: 4.2vw;
        margin: 0;
        color: #2E3030;
       }
       .mini-player-desc {
-        font-size: 13px;
+        font-size: 3.5vw;
         color: #2E3030;
-        margin-top: 3px;
+        margin-top: 0.8vw;
       }
     }
     .mini-player-control {
-      flex: 0 0 30px;
-      width: 30px;
-      padding: 0 10px;
+      flex: 0 0 8vw;
+      width: 8vw;
+      padding: 0 2.7vw;
       .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
-        font-size: 28px;
+        font-size: 7.5vw;
         color: rgba(19, 19, 19, 0.6);
       }
       .iconfont {
         position: relative;
-        left: -5px;
-        top: -3px;
+        left: -0.8vw;
+        top: -0.65vw;
       }
       .icon-iconfront- {
         color: #4c4c4c;
-        font-size: 22px;
+        font-size: 5.9vw;
         position: absolute;
-        left: 5px;
-        top: 3px;
+        left: 0.8vw;
+        top: 0.65vw;
       }
       .icon-icon-- {
         color: #4c4c4c;
-        font-size: 22px;
+        font-size: 5.9vw;
         position: absolute;
-        left: 7px;
-        top: 4px;
+        left: 1.1vw;
+        top: 0.6vw;
       }
     }
     &.mini-enter-active,
