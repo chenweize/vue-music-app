@@ -15,7 +15,7 @@
     "element-ui": "^2.13.0",
     "jquery": "^3.4.1",
     "mint-ui": "^2.2.13",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "pinyin": "^2.9.0",
     "ramda": "^0.26.1",
     "sass-loader": "^7.3.1",
